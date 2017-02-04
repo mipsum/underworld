@@ -1,0 +1,6 @@
+**/dist/*
+_*
+**/docs/
+**/vendors/*
+logs/*
+node_modules/*

@@ -14,7 +14,7 @@ export let click$ =
 
 let handleClick =
   (msg, evt) => {
-    console.log('view', msg, evt)
+    // console.log('view', msg, evt)
     click$(msg(Maybe.Just(20)))
   }
 

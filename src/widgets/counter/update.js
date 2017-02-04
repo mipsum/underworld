@@ -7,17 +7,16 @@ import { Action } from './types'
 
 
 let inc =
-  maybeToValue(() => 1)(() => 0)
+  maybeToValue(() => 1, () => 0)
 
 export let init =
   () => ({ value: 0 })
 
 export let update =
-  ({ value }) =>
-    Action.case({
-      Increment: maybe =>
-        log('inc', ({ value: value + inc(maybe) })),
+  Action.caseOn({
+    Increment: (maybe, { value }) =>
+      log('inc', ({ value: value + inc(maybe) })),
 
-      Decrement: maybe =>
-        log('dec', ({ value: value - inc(maybe) })),
-    })
+    Decrement: (maybe, { value }) =>
+      log('dec', ({ value: value - inc(maybe) })),
+  })

@@ -48,19 +48,19 @@
     "style-loader": "0.13.1",
     "url-loader": "0.5.7",
     "webpack": "1.14.0",
+    "webpack-bundle-analyzer": "^2.2.1",
     "webpack-dev-server": "1.16.2",
     "webpack-manifest-plugin": "1.1.0",
     "webpack-md5-hash": "^0.0.5",
-    "webpack-merge": "^2.6.1",
-    "webpack-notifier": "^1.5.0",
-    "whatwg-fetch": "2.0.2"
+    "webpack-notifier": "^1.5.0"
   },
   "dependencies": {
-    "babel-plugin-inferno": "^1.7.0",
     "flyd": "^0.2.4",
     "inferno": "^1.2.2",
     "inferno-component": "^1.2.2",
-    "union-type": "^0.3.3"
+    "ramda": "^0.23.0",
+    "union-type": "^0.3.3",
+    "whatwg-fetch": "2.0.2"
   },
   "scripts": {
     "start": "node scripts/start.js",
@@ -107,7 +107,7 @@
   "eslintConfig": {
     "extends": "inferno-app",
     "globals": {
-      "log" : true
+      "log": true
     }
   }
 }

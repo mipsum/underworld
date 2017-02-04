@@ -55,12 +55,15 @@ module.exports = {
   devtool: 'source-map',
   // In production, we only want to load the polyfills and the app code.
   entry: [
-    require.resolve('./polyfills'),
+    // require.resolve('./polyfills'),
     paths.appIndexJs
   ],
   output: {
+    sourceMapFilename: 'static/js/maps/[name].[chunkhash:8].map',
     // The build folder.
     path: paths.appBuild,
+    // Add /* filename */ comments to generated require()s in the output.
+    pathinfo: true,
     // Generated JS file names (with nested folders).
     // There will be one main bundle, and one file per asynchronous chunk.
     // We don't currently advertise code splitting but Webpack supports it.
@@ -82,7 +85,7 @@ module.exports = {
     // https://github.com/facebookincubator/create-react-app/issues/290
     extensions: ['.js', '.json', '.jsx', '']
   },
-  
+
   module: {
     // First, run the linter.
     // It's important to do this before Babel processes the JS.
@@ -125,7 +128,7 @@ module.exports = {
         test: /\.(js|jsx)$/,
         include: paths.appSrc,
         loader: 'babel',
-        
+
       },
       // The notation here is somewhat confusing.
       // "postcss" loader applies autoprefixer to our CSS.
@@ -160,7 +163,7 @@ module.exports = {
       }
     ]
   },
-  
+
   // We use PostCSS for autoprefixing only.
   postcss: function() {
     return [
@@ -175,6 +178,16 @@ module.exports = {
     ];
   },
   plugins: [
+    // collect all vendors into a separate bundle
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendors',
+      minChunks (m) {
+
+        // this assumes your vendor imports exist in the node_ms directory
+        return m.context && m.context.indexOf('node_modules') !== -1;
+       }
+    }),
+
     // Makes the public URL available as %PUBLIC_URL% in index.html, e.g.:
     // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
     // In production, it will be an empty string unless you specify "homepage"
@@ -182,6 +195,7 @@ module.exports = {
     new InterpolateHtmlPlugin({
       PUBLIC_URL: publicUrl
     }),
+
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
       inject: true,
@@ -199,31 +213,36 @@ module.exports = {
         minifyURLs: true
       }
     }),
+
     // Makes some environment variables available to the JS code, for example:
     // if (process.env.NODE_ENV === 'production') { ... }. See `./env.js`.
     // It is absolutely essential that NODE_ENV was set to production here.
     // Otherwise Inferno will be compiled in the very slow development mode.
     new webpack.DefinePlugin(env),
+
     // This helps ensure the builds are consistent if source hasn't changed:
     new webpack.optimize.OccurrenceOrderPlugin(),
+
     // Try to dedupe duplicated modules, if any:
     new webpack.optimize.DedupePlugin(),
-    // Minify the code.
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        screw_ie8: true, // Inferno doesn't support IE8
-        warnings: false
-      },
-      mangle: {
-        screw_ie8: true
-      },
-      output: {
-        comments: false,
-        screw_ie8: true
-      }
-    }),
+    // // Minify the code.
+    // new webpack.optimize.UglifyJsPlugin({
+    //   compress: {
+    //     screw_ie8: true, // Inferno doesn't support IE8
+    //     warnings: false
+    //   },
+    //   mangle: {
+    //     screw_ie8: true
+    //   },
+    //   output: {
+    //     comments: false,
+    //     screw_ie8: true
+    //   }
+    // }),
+
     // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
     new ExtractTextPlugin('static/css/[name].[contenthash:8].css'),
+
     // Generate a manifest file which contains a mapping of all asset filenames
     // to their corresponding output file so that tools can pick it up without
     // having to parse `index.html`.

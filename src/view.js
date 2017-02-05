@@ -1,7 +1,6 @@
 // eslint-disable-next-line
 import Inferno from 'inferno'
 
-import Logo from './widgets/logo'
 import { View as ClickView } from './widgets/counter'
 
 export default ({ model }) =>

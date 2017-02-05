@@ -1,29 +1,33 @@
-var curryN = require('ramda/src/curryN');
-var compose = require('ramda/src/compose');
-var isString = function(s) { return typeof s === 'string'; };
-var isNumber = function(n) { return typeof n === 'number'; };
-var isBoolean = function(b) { return typeof b === 'boolean'; };
-var isObject = function(value) {
-  var type = typeof value;
-  return !!value && (type == 'object' || type == 'function');
-};
-var isFunction = function(f) { return typeof f === 'function'; };
-var isArray = Array.isArray || function(a) { return 'length' in a; };
 
-var mapConstrToFn = function(group, constr) {
-  return constr === String    ? isString
-       : constr === Number    ? isNumber
-       : constr === Boolean   ? isBoolean
-       : constr === Object    ? isObject
-       : constr === Array     ? isArray
-       : constr === Function  ? isFunction
-       : constr === undefined ? group
-                              : constr;
-};
+import curryN from 'ramda/src/curryN'
+import compose from 'ramda/src/compose'
+
+
+
+var isString = s => typeof s === 'string'
+var isNumber = n => typeof n === 'number'
+var isBoolean = b =>  typeof b === 'boolean'
+var isFunction = f => typeof f === 'function'
+var isArray = Array.isArray || (a => 'length' in a)
+
+var isObject = value => {
+  var type = typeof value
+  return !!value && (type === 'object' || type === 'function')
+}
+
+var mapConstrToFn = (group, constr) =>
+   constr === String    ? isString
+     : constr === Number    ? isNumber
+     : constr === Boolean   ? isBoolean
+     : constr === Object    ? isObject
+     : constr === Array     ? isArray
+     : constr === Function  ? isFunction
+     : constr === undefined ? group
+                            : constr;
 
 var numToStr = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth'];
 
-var validate = function(group, validators, name, args) {
+function validate (group, validators, name, args) {
   var validator, v, i;
   if (args.length > validators.length) {
     throw new TypeError('too many arguments supplied to constructor ' + name
@@ -56,7 +60,7 @@ function extractValues(keys, obj) {
 }
 
 function constructor(group, name, fields) {
-  var validators, keys = Object.keys(fields), i;
+  var validators, keys = Object.keys(fields);
   if (isArray(fields)) {
     validators = fields;
   } else {
@@ -120,8 +124,8 @@ function createIterator() {
   };
 }
 
-function Type(desc) {
-  var key, res, obj = {};
+export default function Type(desc) {
+  var key, obj = {};
   obj.case = typeCase(obj);
   obj.caseOn = caseOn(obj);
 
@@ -130,8 +134,9 @@ function Type(desc) {
   obj.prototype.case = function (cases) { return obj.case(cases, this); };
   obj.prototype.caseOn = function (cases) { return obj.caseOn(cases, this); };
 
+  // eslint-disable-next-line
   for (key in desc) {
-    res = constructor(obj, key, desc[key]);
+    constructor(obj, key, desc[key]);
   }
   return obj;
 }
@@ -155,5 +160,3 @@ Type.ListOf = function (T) {
   });
   return compose(validate, List.List);
 };
-
-module.exports = Type;

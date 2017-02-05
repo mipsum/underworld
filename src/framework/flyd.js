@@ -1,6 +1,5 @@
-'use strict';
 
-var curryN = require('ramda/src/curryN');
+import curryN from 'ramda/src/curryN'
 
 // Utility
 function isFunction(obj) {
@@ -17,6 +16,7 @@ var flushing = false;
 
 /** @namespace */
 var flyd = {}
+export default flyd
 
 // /////////////////////////// API ///////////////////////////////// //
 
@@ -296,6 +296,7 @@ flyd.transduce = curryN(2, function(xform, source) {
   }, [source]);
 });
 
+// eslint-disable-next-line
 /**
  * Returns `fn` curried to `n`. Use this function to curry functions exposed by
  * modules for Flyd.
@@ -625,5 +626,3 @@ function StreamTransformer() { }
 StreamTransformer.prototype['@@transducer/init'] = function() { };
 StreamTransformer.prototype['@@transducer/result'] = function() { };
 StreamTransformer.prototype['@@transducer/step'] = function(s, v) { return v; };
-
-module.exports = flyd;

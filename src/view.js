@@ -2,7 +2,7 @@
 import Inferno from 'inferno'
 
 import Logo from './widgets/logo'
-import ClickView from './widgets/counter'
+import { View as ClickView } from './widgets/counter'
 
 export default ({ model }) =>
 

@@ -4,6 +4,14 @@ import flyd from 'flyd'
 import { maybeToValue } from '../../types'
 import { Action } from './types'
 
+import { dispatcher$ } from 'fw'
+
+
+dispatcher$.update(res => {
+  console.log('!!!!1', res)
+
+  return res
+})
 
 
 let inc =
@@ -20,3 +28,6 @@ export let update =
     Decrement: (maybe, { value }) =>
       log('dec', ({ value: value - inc(maybe) })),
   })
+
+
+dispatcher$.update(update)

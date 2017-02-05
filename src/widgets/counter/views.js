@@ -7,6 +7,7 @@ import flyd from 'flyd'
 import { Maybe } from '../../types'
 import { Action } from './types'
 
+import { dispatcher$ } from 'fw'
 
 console.log('244243', Maybe)
 
@@ -14,6 +15,7 @@ export let click$ =
   flyd.stream(Action.Increment(Maybe.Nothing()))
   // flyd.stream()
 
+click$.map(dispatcher$)
 
 let handleClick =
   (msg, evt) => {

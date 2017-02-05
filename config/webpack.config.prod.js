@@ -8,7 +8,9 @@ var url = require('url');
 var paths = require('./paths');
 var getClientEnvironment = require('./env');
 
+var path = require('path')
 
+var BASE_PATH = path.resolve(__dirname, '..')
 
 function ensureSlash(path, needsSlash) {
   var hasSlash = path.endsWith('/');
@@ -83,7 +85,13 @@ module.exports = {
     // We also include JSX as a common component filename extension to support
     // some tools, although we do not recommend using it, see:
     // https://github.com/facebookincubator/create-react-app/issues/290
-    extensions: ['.js', '.json', '.jsx', '']
+    extensions: ['.js', '.json', '.jsx', ''],
+
+    alias: {
+      flyd: path.resolve(BASE_PATH, './src/framework/flyd'),
+      'union-type': path.resolve(BASE_PATH, './src/framework/union-type'),
+      fw: path.resolve(BASE_PATH, './src/framework/index'),
+    },
   },
 
   module: {
@@ -226,19 +234,19 @@ module.exports = {
     // Try to dedupe duplicated modules, if any:
     new webpack.optimize.DedupePlugin(),
     // // Minify the code.
-    // new webpack.optimize.UglifyJsPlugin({
-    //   compress: {
-    //     screw_ie8: true, // Inferno doesn't support IE8
-    //     warnings: false
-    //   },
-    //   mangle: {
-    //     screw_ie8: true
-    //   },
-    //   output: {
-    //     comments: false,
-    //     screw_ie8: true
-    //   }
-    // }),
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        screw_ie8: true, // Inferno doesn't support IE8
+        warnings: false
+      },
+      mangle: {
+        screw_ie8: true
+      },
+      output: {
+        comments: false,
+        screw_ie8: true
+      }
+    }),
 
     // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
     new ExtractTextPlugin('static/css/[name].[contenthash:8].css'),

@@ -10,9 +10,10 @@ import View from './view'
 import { update, init } from './widgets/counter/update'
 import { click$ } from './widgets/counter'
 
+import { dispatcher$ } from 'fw'
 
 let model$ =
-  flyd.scan(flip(update), init(), click$)
+  flyd.scan(flip(update), init(), dispatcher$)
 
 let render = model => {
   Inferno.render(<View model={ model }/>, document.getElementById('app'))

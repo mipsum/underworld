@@ -2,8 +2,6 @@
 import curryN from 'ramda/src/curryN'
 import compose from 'ramda/src/compose'
 
-
-
 var isString = s => typeof s === 'string'
 var isNumber = n => typeof n === 'number'
 var isBoolean = b =>  typeof b === 'boolean'
@@ -127,12 +125,21 @@ function createIterator() {
 export default function Type(desc) {
   var key, obj = {};
   obj.case = typeCase(obj);
-  obj.caseOn = caseOn(obj);
+  obj.caseOn = function () {
+    let f = caseOn(obj);
+    f.ctx = this
+    return f
+  }
+  // obj.caseOn.ctx = obj
 
   obj.prototype = {};
   obj.prototype[Symbol ? Symbol.iterator : '@@iterator'] = createIterator;
   obj.prototype.case = function (cases) { return obj.case(cases, this); };
-  obj.prototype.caseOn = function (cases) { return obj.caseOn(cases, this); };
+  obj.prototype.caseOn = function (cases) {
+    let o = obj.caseOn(cases, this)
+    o.ctx = this
+    return o
+  };
 
   // eslint-disable-next-line
   for (key in desc) {

@@ -7,7 +7,9 @@ var WatchMissingNodeModulesPlugin = require('inferno-dev-utils/WatchMissingNodeM
 var getClientEnvironment = require('./env');
 var paths = require('./paths');
 
+var path = require('path')
 
+var BASE_PATH = path.resolve(__dirname, '..')
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
@@ -72,7 +74,12 @@ module.exports = {
     // We also include JSX as a common component filename extension to support
     // some tools, although we do not recommend using it, see:
     // https://github.com/facebookincubator/create-react-app/issues/290
-    extensions: ['.js', '.json', '.jsx', '']
+    extensions: ['.js', '.json', '.jsx', ''],
+
+    alias: {
+      flyd: path.resolve(BASE_PATH, './src/framework/flyd'),
+      'union-type': path.resolve(BASE_PATH, './src/framework/union-type'),
+    }
   },
 
   module: {

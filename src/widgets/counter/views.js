@@ -8,6 +8,8 @@ import { Maybe } from '../../types'
 import { Action } from './types'
 
 
+console.log('244243', Maybe)
+
 export let click$ =
   flyd.stream(Action.Increment(Maybe.Nothing()))
   // flyd.stream()

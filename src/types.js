@@ -24,3 +24,6 @@ let _maybeToValue =
 
 export let maybeToValue =
   flyd.curryN(3, _maybeToValue)
+
+
+console.log('*****', Maybe)

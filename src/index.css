@@ -1,5 +1,55 @@
+html, body {
+  background:
+    radial-gradient(black 15%, transparent 16%) 0 0,
+    radial-gradient(black 15%, transparent 16%) 8px 8px,
+    radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 0 1px,
+    radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 8px 9px;
+  background-color:#282828;
+  background-size:16px 16px;
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+
+}
+
+/*html {
+  height: 100%;
+  padding: 0;
+}
+
 body {
   margin: 0;
   padding: 0;
-  font-family: "Open Sans", "lucida grande", "Segoe UI", arial, verdana, "lucida sans unicode", tahoma, sans-serif;
-}
+  font-family: 'Roboto', sans-serif;
+  height: 100vh;
+
+  background:
+  	repeating-linear-gradient(
+  		#F3F5C4 0,
+  		#F3F5C4 3em,
+  		#F19181 3em,
+  		#F19181 6em
+  	),
+  	repeating-linear-gradient(
+  		90deg,
+  		#3CBAC8 0,
+  		skyblue 3em,
+  		#3CBAC8 3em,
+  		#3CBAC8 6em
+  	),
+  	repeating-linear-gradient(
+  		45deg,
+  		transparent 0,
+  		transparent 6em,
+  		#3CBAC8 12em
+  	),
+  	repeating-linear-gradient(
+  		-45deg,
+  		transparent 0,
+  		transparent 6em,
+  		#3CBAC8 12em
+  	);
+
+  background-blend-mode: multiply;
+
+
+  "Open Sans", "lucida grande", "Segoe UI", arial, verdana, "lucida sans unicode", tahoma, sans-serif;
+}*/

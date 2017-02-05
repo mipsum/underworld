@@ -1,7 +1,7 @@
 import './app.css'
 import Inferno from 'inferno'
 
-import __ from 'ramda/src/__'
+import flip from 'ramda/src/flip'
 
 import flyd from 'flyd'
 
@@ -11,12 +11,8 @@ import { update, init } from './widgets/counter/update'
 import { click$ } from './widgets/counter'
 
 
-let _update =
-  (model, act) =>
-    update(act, model)
-
 let model$ =
-  flyd.scan(_update, init(), click$)
+  flyd.scan(flip(update), init(), click$)
 
 let render = model => {
   Inferno.render(<View model={ model }/>, document.getElementById('app'))
@@ -24,6 +20,7 @@ let render = model => {
 
 export default () => {
   flyd.on(render, model$)
+
 }
 
 

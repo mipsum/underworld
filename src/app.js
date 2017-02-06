@@ -15,6 +15,7 @@ let model$ =
   flyd.scan(appReducer, init(), dispatcher$)
 
 let render = model => {
+  // model.test = 'test'
   console.log('render:', model)
   Inferno.render(<View model={ model }/>, document.getElementById('app'))
 }

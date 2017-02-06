@@ -4,9 +4,22 @@
 // commit: 566d4e7
 
 let isFrozen = Object.isFrozen
+let isProd = 'production' === process.env.NODE_ENV
+
+
+
+let shouldDeepFreeze =
+  (o, prop) =>
+    o.hasOwnProperty(prop)
+      && o[prop] !== null
+      && (typeof o[prop] === "object" || typeof o[prop] === "function")
+      && !isFrozen(o[prop])
+
+
 
 export default function deepFreeze (o) {
-  if ('production' === process.env.NODE_ENV) {
+  if (isProd) {
+    console.log('is prod')
     return o
   }
 
@@ -14,14 +27,8 @@ export default function deepFreeze (o) {
     Object.freeze(o)
   }
 
-  Object.getOwnPropertyNames(o).forEach(function (prop) {
-    if (o.hasOwnProperty(prop)
-    && o[prop] !== null
-    && (typeof o[prop] === "object" || typeof o[prop] === "function")
-    && !isFrozen(o[prop])) {
-      deepFreeze(o[prop])
-    }
-  })
+  Object.getOwnPropertyNames(o)
+    .forEach(prop => shouldDeepFreeze(o, prop) ? deepFreeze(o[prop]) : o)
 
   return o
 }

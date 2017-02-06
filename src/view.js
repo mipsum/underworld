@@ -13,7 +13,7 @@ export default ({ model }) =>
     <div class="container wrapper">
 
       <div class="row">
-        <div class="column column-60 column-offset-20">
+        <div class="column column-center">
           <div class="container">
 
             {/* <div class="row"> */}

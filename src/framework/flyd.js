@@ -1,3 +1,7 @@
+// NOTE:
+// code witho minor changes from copied from:
+// https://github.com/paldepind/flyd/blob/master/lib/index.js
+// commit: eeed1e0
 
 import curryN from 'ramda/src/curryN'
 

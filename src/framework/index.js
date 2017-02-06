@@ -1,96 +1,58 @@
 import flyd from './flyd'
 
+import deepFreeze from './deep-freeze'
+
 export let dispatcher$ =
   flyd.stream()
+
+let reducerCreator =
+  (reducerPipeline, newReducer) =>
+    (model, msg) =>
+      newReducer(deepFreeze(reducerPipeline(deepFreeze(model), msg)), msg)
+
+let noopReducer =
+  (model, msg) => log('first noop reducer:', model)
+
 
 let reducerSink$ =
   flyd.stream()
 
 
-let firstReducer =
-  (msg, model) => {
-    console.log('first red', model, msg)
-
-    return model
-  }
-
-let reducerCreator =
-  (reducerPipeline, newReducer) => {
-
-    console.log('up', reducerPipeline, newReducer)
-
-    // let reducer = reducer$()
-    return (model, msg) =>
-      newReducer(msg, reducerPipeline(msg, model))
-
-  }
-
-
-
 let reducer$ =
-  flyd.scan(reducerCreator, firstReducer, reducerSink$)
-
-let wrapper =
-  fn => flyd.curryN(2, (msg, model) => {
-
-    console.log(['wraped up', msg, model])
-
-    if (fn._ctx && fn._ctx.prototype.isPrototypeOf(msg)) {
-      return fn(msg, model)
-    }
-
-    return model
-
-
-
-    // if (!fn._ctx) {
-    //   return fn(o)
-    // }
-    //
-    // console.log(['----- map fn wrapped', o, fn._ctx.prototype.isPrototypeOf(o), fn])
-    // return fn(o)
-  })
-
+  flyd.scan(reducerCreator, noopReducer, reducerSink$)
 
 
 export let appReducer =
   (model, msg) => reducer$()(model, msg)
 
-dispatcher$.update =
-  function update (fn) {
-    // console.log('++++++++', wrapper(fn))
+
+let reducerWrap =
+  fn => flyd.curryN(2, (model, msg) => {
+    if (fn._ctx) {
+      if (fn._ctx.prototype.isPrototypeOf(msg)) {
+        // the order of args is a bit different this case
+        return fn(msg, model)
+      }
+      return model
+    }
+
+    let f = fn(model)
+
+    if (!f._ctx) {
+      if ('function' === typeof f) {
+        return f(msg)
+      }
+
+      return f
+    }
+
+    if (f._ctx && f._ctx.prototype.isPrototypeOf(msg)) {
+      return f(msg)
+    }
+
+    return model
+  })
 
 
-    // dispatcher$.map(wrapper(fn))
-
-    // reducerSink$(fn)
-    reducerSink$(wrapper(fn))
-  }
-
-
-//
-// function createUpdate (st) {
-//   let _map = st.map
-//
-//   return function update (fn) {
-//     // console.log('----- wrapping', fn)
-//
-//     return _map.call(this, wrapper(fn))
-//   }
-//
-// }
-//
-// //TODO: write a test before calling the update fn
-// let wrapper =
-//   f => {
-//     return o => {
-//       if (!f.ctx) {
-//         return f(o)
-//       }
-//
-//
-//
-//       console.log(['----- map fn wrapped', o, f.ctx.prototype.isPrototypeOf(o), f])
-//       return f(o)
-//     }
-//   }
+dispatcher$.store =
+  fn => { reducerSink$(reducerWrap(fn)) }

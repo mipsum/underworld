@@ -19,17 +19,13 @@ export const Maybe01 =
 
 export let click$ =
   flyd.stream(Action.Increment(Maybe.Nothing()))
-  // flyd.stream()
 
 click$.map(dispatcher$)
 
 let handleClick =
   (msg, evt) => {
-    // console.log('view', msg, evt)
-    // click$(msg(Maybe.Just(20)))
     click$(msg(Maybe.Just(20)))
   }
-
 
 export default
   ({ model }) =>

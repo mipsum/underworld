@@ -1,3 +1,7 @@
+// NOTE:
+// code witho minor changes from copied from:
+// https://github.com/paldepind/union-type/blob/v0.3.3/union-type.js
+// eef0da2
 
 import curryN from 'ramda/src/curryN'
 import compose from 'ramda/src/compose'
@@ -124,13 +128,25 @@ function createIterator() {
 
 export default function Type(desc) {
   var key, obj = {};
-  obj.case = typeCase(obj);
-  // obj.caseOn = caseOn(obj);
-  // obj.caseOn = curryN(4, function (a0, a1, a2, a3) {
-  //   let o = caseOn(a0, a1, a2, a3)
-  // })(obj)
+
+  obj.case = curryN(1, function (...args) {
+    let o = typeCase(obj)(...args)
+
+    if (2 === args.length) {
+      return o
+    }
+
+    o._ctx = obj
+    return o
+  })
+
   obj.caseOn = curryN(1, function (...args) {
     let o = caseOn(obj)(...args)
+
+    if (3 === args.length) {
+      return o
+    }
+
     o._ctx = obj
     return o
   })
@@ -138,10 +154,16 @@ export default function Type(desc) {
 
   obj.prototype = {};
   obj.prototype[Symbol ? Symbol.iterator : '@@iterator'] = createIterator;
-  obj.prototype.case = function (cases) { return obj.case(cases, this); };
+
+  obj.prototype.case = function (cases) {
+    let o = obj.case(cases, this)
+    // o._ctx = this
+    return o
+  };
+
   obj.prototype.caseOn = function (cases) {
     let o = obj.caseOn(cases, this)
-    o._ctx = this
+    // o._ctx = this
     return o
   };
 

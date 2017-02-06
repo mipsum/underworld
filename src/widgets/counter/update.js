@@ -55,8 +55,16 @@ dispatcher$.store(flyd.curryN(2, (model, msg) => {
 
 }))
 
+export async function some () {
+  console.log(await 'aaa')
+  return 'ppp'
+}
+
+
 // NOTE: not good
 dispatcher$.store((model, msg) => {
+  some().then(s => console.log('222222', s))
+
   console.log('not curryed store', model, msg)
   return { ...model, ...{ no: 'NO' }}
 })

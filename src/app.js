@@ -1,21 +1,21 @@
 import './app.css'
 import Inferno from 'inferno'
 
-import flip from 'ramda/src/flip'
+// import flip from 'ramda/src/flip'
 
 import flyd from 'flyd'
 
 import View from './view'
 
-import { update, init } from './widgets/counter/update'
-import { click$ } from './widgets/counter'
+import { init } from './widgets/counter/update'
 
-import { dispatcher$ } from 'fw'
+import { dispatcher$, appReducer } from 'fw'
 
 let model$ =
-  flyd.scan(flip(update), init(), dispatcher$)
+  flyd.scan(appReducer, init(), dispatcher$)
 
 let render = model => {
+  console.log('render:', model)
   Inferno.render(<View model={ model }/>, document.getElementById('app'))
 }
 

@@ -26,4 +26,26 @@ export let maybeToValue =
   flyd.curryN(3, _maybeToValue)
 
 
-console.log('*****', Maybe)
+
+
+
+export const Result =
+  Type({
+    Err: [any],
+    Ok: [any],
+  })
+
+Result.prototype.map =
+  function (fn) {
+    return Result.case({
+      Err: () => Result.Nothing(),
+      Ok: v => Result.Just(fn(v))
+    }, this)
+  }
+
+let _resultToValue =
+  (Ok, Err, result) =>
+    result.case({ Err, Ok })
+
+export let resultToValue =
+  flyd.curryN(3, _resultToValue)

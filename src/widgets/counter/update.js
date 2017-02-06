@@ -1,17 +1,17 @@
 // eslint-disable-next-line
 import flyd from 'flyd'
 
-import { maybeToValue } from '../../types'
+import { maybeToValue } from 'fw/types'
 import { Action } from './types'
 
 import { dispatcher$ } from 'fw'
 
 
-dispatcher$.update(res => {
-  console.log('!!!!1', res)
-
-  return res
-})
+// dispatcher$.update(res => {
+//   console.log('!!!!1', res)
+//
+//   return res
+// })
 
 
 let inc =

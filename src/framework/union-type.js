@@ -125,23 +125,27 @@ function createIterator() {
 export default function Type(desc) {
   var key, obj = {};
   obj.case = typeCase(obj);
-  obj.caseOn = function () {
-    let f = caseOn(obj);
-    f.ctx = this
-    return f
-  }
-  // obj.caseOn.ctx = obj
+  // obj.caseOn = caseOn(obj);
+  // obj.caseOn = curryN(4, function (a0, a1, a2, a3) {
+  //   let o = caseOn(a0, a1, a2, a3)
+  // })(obj)
+  obj.caseOn = curryN(1, function (...args) {
+    let o = caseOn(obj)(...args)
+    o._ctx = obj
+    return o
+  })
+
 
   obj.prototype = {};
   obj.prototype[Symbol ? Symbol.iterator : '@@iterator'] = createIterator;
   obj.prototype.case = function (cases) { return obj.case(cases, this); };
   obj.prototype.caseOn = function (cases) {
     let o = obj.caseOn(cases, this)
-    o.ctx = this
+    o._ctx = this
     return o
   };
 
-  // eslint-disable-next-line
+  // eslint-disable-next-line guard-for-in
   for (key in desc) {
     constructor(obj, key, desc[key]);
   }

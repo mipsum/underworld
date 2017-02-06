@@ -1,5 +1,5 @@
 import Type from 'union-type'
-import { Maybe } from '../../types'
+import { Maybe } from 'fw/types'
 
 
 export const Action =

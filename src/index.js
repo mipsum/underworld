@@ -7,8 +7,10 @@ import 'milligram'
 // import 'roboto-fontface/css/roboto/roboto-fontface.css'
 
 import './index.css'
+import './app.css'
 
 
-import App from './app'
 
-document.addEventListener("DOMContentLoaded", App)
+import run from './app'
+
+document.addEventListener("DOMContentLoaded", run)

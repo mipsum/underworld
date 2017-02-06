@@ -1,10 +1,10 @@
 // eslint-disable-next-line
-import flyd from 'flyd'
+import flyd from 'fw/flyd'
 
 import { maybeToValue } from 'fw/types'
 import { Action } from './types'
 
-import { dispatcher$ } from 'fw'
+import dispatcher$ from 'fw'
 
 
 // dispatcher$.store(res => {
@@ -14,8 +14,8 @@ import { dispatcher$ } from 'fw'
 // })
 
 
-let inc =
-  maybeToValue(() => 1, () => 0)
+let inc : Function =
+  maybeToValue(v => v, () => 0)
 
 export let init =
   () => ({ value: 0 })
@@ -49,7 +49,7 @@ dispatcher$.store(update)
 // NOTE: OK
 dispatcher$.store(flyd.curryN(2, (model, msg) => {
 
-  console.log('curryed store', model, msg)
+  // console.log('curryed store', model, msg)
   // model.jj = 'jj'
   return {...model, ...{ yes: 'Yes' }}
 
@@ -63,8 +63,8 @@ export async function some () {
 
 // NOTE: not good
 dispatcher$.store((model, msg) => {
-  some().then(s => console.log('222222', s))
+  // some().then(s => console.log('222222', s))
 
-  console.log('not curryed store', model, msg)
+  // console.log('not curryed store', model, msg)
   return { ...model, ...{ no: 'NO' }}
 })

@@ -2,20 +2,12 @@
 // eslint-disable-next-line
 import Inferno, { linkEvent } from 'inferno'
 
-import flyd from 'flyd'
+import flyd from 'fw/flyd'
 
 import { Maybe } from 'fw/types'
 import { Action } from './types'
 
-import { dispatcher$ } from 'fw'
-
-import Type from 'union-type'
-
-export const Maybe01 =
-  Type({
-    Nothing: [],
-    Just: [n => 1 === n],
-  })
+import dispatcher$ from 'fw'
 
 export let click$ =
   flyd.stream(Action.Increment(Maybe.Nothing()))
@@ -24,7 +16,7 @@ click$.map(dispatcher$)
 
 let handleClick =
   (msg, evt) => {
-    click$(msg(Maybe.Just(20)))
+    click$(msg(Maybe.Just(1)))
   }
 
 export default

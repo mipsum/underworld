@@ -25,9 +25,18 @@ var mapConstrToFn = (group, constr) =>
      : constr === Array     ? isArray
      : constr === Function  ? isFunction
      : constr === undefined ? group
+    //  : group._ctor
                             : constr;
 
 var numToStr = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth'];
+
+function isPrototypeOf (o, v) {
+  return o.prototype.isPrototypeOf(v)
+    ? true
+    : o._ctor
+      ? o._ctor.prototype.isPrototypeOf(v) ? true : false
+      : false
+}
 
 function validate (group, validators, name, args) {
   var validator, v, i;
@@ -38,8 +47,16 @@ function validate (group, validators, name, args) {
   for (i = 0; i < args.length; ++i) {
     v = args[i];
     validator = mapConstrToFn(group, validators[i]);
+
+    if (!validator.prototype.isPrototypeOf(v) && validator._ctor && v._name) {
+      // console.log(['nested validation:', group, validators[i], validators, name, v ])
+
+      // nested validation being done here
+      validators[i][v._name](...valueToArray(v))
+    }
+
     if (Type.check === true &&
-        (validator.prototype === undefined || !validator.prototype.isPrototypeOf(v)) &&
+        (validator.prototype === undefined || !isPrototypeOf(validator, v)) &&
         (typeof validator !== 'function' || !validator(v))) {
       var strVal = typeof v === 'string' ? "'" + v + "'" : v; // put the value in quotes if it's a string
       throw new TypeError('wrong value ' + strVal + ' passed as ' + numToStr[i] + ' argument to constructor ' + name);
@@ -96,7 +113,8 @@ function rawCase(type, cases, value, arg) {
     wildcard = true;
   }
   if (Type.check === true) {
-    if (!type.prototype.isPrototypeOf(value)) {
+
+    if (!isPrototypeOf(type, value)) {
       throw new TypeError('wrong type passed to case');
     } else if (handler === undefined) {
       throw new Error('non-exhaustive patterns in a function');

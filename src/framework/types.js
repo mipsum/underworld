@@ -1,5 +1,5 @@
-import Type from 'union-type'
-import flyd from 'flyd'
+import Type from './union-type'
+import flyd from './flyd'
 
 export const any = () => true
 export const none = () => false
@@ -10,6 +10,13 @@ export const Maybe =
     Just: [any],
   })
 
+Maybe.extends = type => {
+  let t = Type(type)
+  t._ctor = Maybe
+  return t
+}
+
+
 Maybe.prototype.map =
   function (fn) {
     return Maybe.case({
@@ -18,15 +25,10 @@ Maybe.prototype.map =
     }, this)
   }
 
-let _maybeToValue =
-  (Just, Nothing, maybe) =>
-    maybe.case({ Nothing, Just })
-
 export let maybeToValue =
-  flyd.curryN(3, _maybeToValue)
-
-
-
+  flyd.curryN(3,
+    (Just, Nothing, maybe) => maybe.case({ Nothing, Just })
+  )
 
 
 export const Result =

@@ -204,8 +204,10 @@ Type.ListOf = function (T) {
   var innerType = Type({T: [T]}).T;
   var validate = List.case({
     List: function (array) {
+      var n;
+
       if (!__DEV__) {
-        for(var n = 0; n < array.length; n++) {
+        for(n = 0; n < array.length; n++) {
           innerType(array[n]);
         }
 
@@ -213,7 +215,7 @@ Type.ListOf = function (T) {
       }
 
       try {
-        for(var n = 0; n < array.length; n++) {
+        for(n = 0; n < array.length; n++) {
           innerType(array[n]);
         }
       } catch (e) {

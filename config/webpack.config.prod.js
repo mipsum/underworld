@@ -152,10 +152,16 @@ module.exports = {
       // use the "style" loader inside the async code so CSS from them won't be
       // in the main CSS file.
       {
-        test: /\.css$/,
-        loader: ExtractTextPlugin.extract('style', 'css?importLoaders=1!postcss')
+        test: /\.(css|scss|sass)$/,
         // Note: this won't work without `new ExtractTextPlugin()` in `plugins`.
+
+        loader: ExtractTextPlugin.extract("style-loader", "css-loader", 'postcss-loader', 'sass-loader'),
+
       },
+      // {
+      //   test: /\.css$/,
+      //   loader: ExtractTextPlugin.extract('style', 'css?importLoaders=1!postcss')
+      // },
       // JSON is not enabled by default in Webpack but both Node and Browserify
       // allow it implicitly so we also enable it.
       {
@@ -273,6 +279,7 @@ module.exports = {
 
     // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
     new ExtractTextPlugin('static/css/[name].[contenthash:8].css'),
+
 
     // Generate a manifest file which contains a mapping of all asset filenames
     // to their corresponding output file so that tools can pick it up without

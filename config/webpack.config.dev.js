@@ -44,9 +44,9 @@ module.exports = {
     // require.resolve('webpack/hot/dev-server'),
     require.resolve('inferno-dev-utils/webpackHotDevClient'),
     // We ship a few polyfills by default:
-    require.resolve('./polyfills'),
+    path.resolve(BASE_PATH, './src/polyfills'),
     // Finally, this is your app's code:
-    paths.appIndexJs
+    paths.appIndexJs,
     // We include the app code last so that if there is a runtime error during
     // initialization, it doesn't blow up the WebpackDevServer client, and
     // changing JS code would still trigger a refresh.
@@ -179,6 +179,9 @@ module.exports = {
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendors',
       minChunks (m) {
+        if (m.context && m.context.indexOf('whatwg-fetch')) { return false }
+        if (m.context && m.context.indexOf('promise/lib/')) { return false }
+        if (m.context && m.context.indexOf('object-assign')) { return false }
 
         // this assumes your vendor imports exist in the node_ms directory
         return m.context && m.context.indexOf('node_modules') !== -1;

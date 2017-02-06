@@ -1,3 +1,5 @@
+import './polyfills'
+
 import './setup'
 import 'normalize.css'
 import 'milligram'

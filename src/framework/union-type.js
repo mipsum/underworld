@@ -40,10 +40,14 @@ function isPrototypeOf (o, v) {
 
 function validate (group, validators, name, args) {
   var validator, v, i;
-  if (args.length > validators.length) {
-    throw new TypeError('too many arguments supplied to constructor ' + name
-      + ' (expected ' + validators.length + ' but got ' + args.length + ')');
+
+  if (__DEV__) {
+    if (args.length > validators.length) {
+      throw new TypeError('too many arguments supplied to constructor ' + name
+        + ' (expected ' + validators.length + ' but got ' + args.length + ')');
+    }
   }
+
   for (i = 0; i < args.length; ++i) {
     v = args[i];
     validator = mapConstrToFn(group, validators[i]);
@@ -55,11 +59,12 @@ function validate (group, validators, name, args) {
       validators[i][v._name](...valueToArray(v))
     }
 
-    if (Type.check === true &&
-        (validator.prototype === undefined || !isPrototypeOf(validator, v)) &&
-        (typeof validator !== 'function' || !validator(v))) {
-      var strVal = typeof v === 'string' ? "'" + v + "'" : v; // put the value in quotes if it's a string
-      throw new TypeError('wrong value ' + strVal + ' passed as ' + numToStr[i] + ' argument to constructor ' + name);
+    if (__DEV__) {
+      if ((validator.prototype === undefined || !isPrototypeOf(validator, v)) &&
+          (typeof validator !== 'function' || !validator(v))) {
+        var strVal = typeof v === 'string' ? "'" + v + "'" : v; // put the value in quotes if it's a string
+        throw new TypeError('wrong value ' + strVal + ' passed as ' + numToStr[i] + ' argument to constructor ' + name);
+      }
     }
   }
 };
@@ -89,7 +94,7 @@ function constructor(group, name, fields) {
     var val = Object.create(group.prototype), i;
     val._keys = keys;
     val._name = name;
-    if (Type.check === true) {
+    if (__DEV__) {
       validate(group, validators, name, arguments);
     }
     for (i = 0; i < arguments.length; ++i) {
@@ -112,7 +117,7 @@ function rawCase(type, cases, value, arg) {
     handler = cases['_'];
     wildcard = true;
   }
-  if (Type.check === true) {
+  if (__DEV__) {
 
     if (!isPrototypeOf(type, value)) {
       throw new TypeError('wrong type passed to case');
@@ -199,6 +204,14 @@ Type.ListOf = function (T) {
   var innerType = Type({T: [T]}).T;
   var validate = List.case({
     List: function (array) {
+      if (!__DEV__) {
+        for(var n = 0; n < array.length; n++) {
+          innerType(array[n]);
+        }
+
+        return true
+      }
+
       try {
         for(var n = 0; n < array.length; n++) {
           innerType(array[n]);

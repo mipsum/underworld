@@ -115,7 +115,8 @@
   "eslintConfig": {
     "extends": "inferno-app",
     "globals": {
-      "log": true
+      "log": true,
+      "__DEV__": true
     }
   }
 }

@@ -236,9 +236,29 @@ module.exports = {
     new webpack.optimize.DedupePlugin(),
     // // Minify the code.
     new webpack.optimize.UglifyJsPlugin({
+
+      // warnings: true,
+      // screw_ie8: true,
+      // conditionals: true,
+      // unused: true,
+      // comparisons: true,
+      // sequences: true,
+      // dead_code: true,
+      // evaluate: true,
+      // if_return: true,
+      // join_vars: true,
+      warnings: true,
+
       compress: {
         screw_ie8: true, // Inferno doesn't support IE8
-        warnings: false
+        warnings: false,
+        dead_code: true,
+        unused: true,
+        warnings: true,
+        passes: 2,
+        drop_debugger: true,
+        collapse_vars: true,
+        reduce_vars: true,
       },
       mangle: {
         screw_ie8: true
@@ -248,6 +268,8 @@ module.exports = {
         screw_ie8: true
       }
     }),
+
+
 
     // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
     new ExtractTextPlugin('static/css/[name].[contenthash:8].css'),

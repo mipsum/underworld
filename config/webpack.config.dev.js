@@ -173,13 +173,14 @@ module.exports = {
     ];
   },
   plugins: [
+
     // collect all vendors into a separate bundle
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendors',
       minChunks (m) {
-        if (m.context && m.context.indexOf('whatwg-fetch')) { return false }
-        if (m.context && m.context.indexOf('promise/lib/')) { return false }
-        if (m.context && m.context.indexOf('object-assign')) { return false }
+        // if (m.context && m.context.indexOf('whatwg-fetch')) { return false }
+        // if (m.context && m.context.indexOf('promise/lib/')) { return false }
+        // if (m.context && m.context.indexOf('object-assign')) { return false }
 
         // this assumes your vendor imports exist in the node_ms directory
         return m.context && m.context.indexOf('node_modules') !== -1;

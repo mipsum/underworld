@@ -17,6 +17,7 @@ import dispatcher$ from 'fw'
 let inc : Function =
   maybeToValue(v => v, () => 0)
 
+
 export let init =
   () => ({ value: 0 })
 

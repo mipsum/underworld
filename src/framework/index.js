@@ -52,5 +52,6 @@ let reducerWrap =
 dispatcher$.reducer =
   (model, msg) => reducer$()(model, msg)
 
+
 dispatcher$.store =
   fn => { reducerSink$(reducerWrap(fn)) }

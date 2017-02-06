@@ -4,8 +4,6 @@
 // commit: 566d4e7
 
 let isFrozen = Object.isFrozen
-let isProd = 'production' === process.env.NODE_ENV
-
 
 let shouldDeepFreeze =
   (o, prop) =>
@@ -16,9 +14,10 @@ let shouldDeepFreeze =
 
 
 export default function deepFreeze (o) {
-  if (isProd) {
+  if (!__DEV__) {
     return o
   }
+
 
   if (!isFrozen(o)) {
     Object.freeze(o)

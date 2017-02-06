@@ -63,6 +63,7 @@ code {
 }
 
 .well {
+  color: white;
 
   /*outline: none;*/
   width: 90%;

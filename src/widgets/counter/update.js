@@ -50,6 +50,7 @@ dispatcher$.store(update)
 dispatcher$.store(flyd.curryN(2, (model, msg) => {
 
   console.log('curryed store', model, msg)
+  // model.jj = 'jj'
   return {...model, ...{ yes: 'Yes' }}
 
 }))

@@ -8,7 +8,7 @@ export let dispatcher$ =
 let reducerCreator =
   (reducerPipeline, newReducer) =>
     (model, msg) =>
-      newReducer(deepFreeze(reducerPipeline(deepFreeze(model), msg)), msg)
+      deepFreeze(newReducer(deepFreeze(reducerPipeline(deepFreeze(model), msg)), msg))
 
 let noopReducer =
   (model, msg) => log('first noop reducer:', model)

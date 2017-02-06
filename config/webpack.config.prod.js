@@ -90,7 +90,7 @@ module.exports = {
     alias: {
       flyd: path.resolve(BASE_PATH, './src/framework/flyd'),
       'union-type': path.resolve(BASE_PATH, './src/framework/union-type'),
-      fw: path.resolve(BASE_PATH, './src/framework/index'),
+      fw: path.resolve(BASE_PATH, './src/framework'),
     },
   },
 

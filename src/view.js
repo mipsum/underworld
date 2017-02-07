@@ -3,6 +3,12 @@ import Inferno from 'inferno'
 
 import { View as ClickView } from './widgets/counter'
 
+// import Dropdown from './widgets/dropdown'
+
+const options = [
+  'one', 'two', 'three'
+]
+
 export default ({ model }) =>
 
   <div>
@@ -25,6 +31,12 @@ export default ({ model }) =>
                 </div>
 
                 <div class="well">
+
+                   {/* <Dropdown options={options} onChange={s => log('drop changed', s)} value={'two'} placeholder="Select an option" /> */}
+
+
+
+
                   <h4><b>John Doe</b></h4>
                   <p>Architect & Engineers</p>
 

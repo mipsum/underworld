@@ -18,7 +18,6 @@ export default function deepFreeze (o) {
     return o
   }
 
-
   if (!isFrozen(o)) {
     Object.freeze(o)
   }

@@ -2,7 +2,7 @@
 import Inferno from 'inferno'
 
 
-import dispatcher$ from 'fw'
+import { dispatcher$ } from 'fw'
 import stream from 'fw/stream'
 
 import View from './view'

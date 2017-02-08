@@ -6,7 +6,7 @@ import curryN from 'ramda/src/curryN'
 import { maybeToValue } from 'fw/types'
 import { Action } from './types'
 
-import dispatcher$ from 'fw'
+import { dispatcher$ } from 'fw'
 
 
 // dispatcher$.store(res => {

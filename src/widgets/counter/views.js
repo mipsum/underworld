@@ -7,7 +7,7 @@ import stream from 'fw/stream'
 import { Maybe } from 'fw/types'
 import { Action } from './types'
 
-import dispatcher$ from 'fw'
+import { dispatcher$ } from 'fw'
 
 export let click$ =
   stream(Action.Increment(Maybe.Nothing()))

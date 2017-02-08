@@ -40,12 +40,13 @@ function isPrototypeOf (o, v) {
 
 function validate (group, validators, name, args) {
   var validator, v, i;
+  if(!__DEV__) {
+    return
+  }
 
-  if (__DEV__) {
-    if (args.length > validators.length) {
-      throw new TypeError('too many arguments supplied to constructor ' + name
-        + ' (expected ' + validators.length + ' but got ' + args.length + ')');
-    }
+  if (args.length > validators.length) {
+    throw new TypeError('too many arguments supplied to constructor ' + name
+      + ' (expected ' + validators.length + ' but got ' + args.length + ')');
   }
 
   for (i = 0; i < args.length; ++i) {
@@ -59,12 +60,10 @@ function validate (group, validators, name, args) {
       validators[i][v._name](...valueToArray(v))
     }
 
-    if (__DEV__) {
-      if ((validator.prototype === undefined || !isPrototypeOf(validator, v)) &&
-          (typeof validator !== 'function' || !validator(v))) {
-        var strVal = typeof v === 'string' ? "'" + v + "'" : v; // put the value in quotes if it's a string
-        throw new TypeError('wrong value ' + strVal + ' passed as ' + numToStr[i] + ' argument to constructor ' + name);
-      }
+    if ((validator.prototype === undefined || !isPrototypeOf(validator, v)) &&
+        (typeof validator !== 'function' || !validator(v))) {
+      var strVal = typeof v === 'string' ? "'" + v + "'" : v; // put the value in quotes if it's a string
+      throw new TypeError('wrong value ' + strVal + ' passed as ' + numToStr[i] + ' argument to constructor ' + name);
     }
   }
 };
@@ -87,9 +86,11 @@ function constructor(group, name, fields) {
   var validators, keys = Object.keys(fields);
   if (isArray(fields)) {
     validators = fields;
-  } else {
+  }
+  else {
     validators = extractValues(keys, fields);
   }
+
   function construct() {
     var val = Object.create(group.prototype), i;
     val._keys = keys;
@@ -117,6 +118,7 @@ function rawCase(type, cases, value, arg) {
     handler = cases['_'];
     wildcard = true;
   }
+
   if (__DEV__) {
 
     if (!isPrototypeOf(type, value)) {
@@ -125,6 +127,7 @@ function rawCase(type, cases, value, arg) {
       throw new Error('non-exhaustive patterns in a function');
     }
   }
+
   if (handler !== undefined) {
     var args = wildcard === true ? [arg]
              : arg !== undefined ? valueToArray(value).concat([arg])
@@ -180,13 +183,11 @@ export default function Type(desc) {
 
   obj.prototype.case = function (cases) {
     let o = obj.case(cases, this)
-    // o._ctx = this
     return o
   };
 
   obj.prototype.caseOn = function (cases) {
     let o = obj.caseOn(cases, this)
-    // o._ctx = this
     return o
   };
 
@@ -205,6 +206,8 @@ Type.ListOf = function (T) {
   var validate = List.case({
     List: function (array) {
       var n;
+
+      // the goa here is avoiding try-catch in prod.
 
       if (!__DEV__) {
         for(n = 0; n < array.length; n++) {

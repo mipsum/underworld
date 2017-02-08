@@ -1,9 +1,12 @@
-import flyd from './flyd'
-
 import deepFreeze from './deep-freeze'
 
+import stream from './stream'
+import curryN from 'ramda/src/curryN'
+
+
+
 export let dispatcher$ =
-  flyd.stream()
+  stream()
 
 export default dispatcher$
 
@@ -18,15 +21,15 @@ let noopReducer =
 
 
 let reducerSink$ =
-  flyd.stream()
+  stream()
 
 
 let reducer$ =
-  flyd.scan(reducerCreator, noopReducer, reducerSink$)
+  stream.scan(reducerCreator, noopReducer, reducerSink$)
 
 
 let reducerWrap =
-  fn => flyd.curryN(2, (model, msg) => {
+  fn => curryN(2, (model, msg) => {
     if (fn._ctx) {
       return fn._ctx.prototype.isPrototypeOf(msg)
         // the order of args is a bit different this case

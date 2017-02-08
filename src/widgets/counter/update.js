@@ -1,5 +1,7 @@
 // eslint-disable-next-line
-import flyd from 'fw/flyd'
+import stream from 'fw/stream'
+
+import curryN from 'ramda/src/curryN'
 
 import { maybeToValue } from 'fw/types'
 import { Action } from './types'
@@ -48,7 +50,7 @@ export let update =
 dispatcher$.store(update)
 
 // NOTE: OK
-dispatcher$.store(flyd.curryN(2, (model, msg) => {
+dispatcher$.store(curryN(2, (model, msg) => {
 
   // console.log('curryed store', model, msg)
   // model.jj = 'jj'

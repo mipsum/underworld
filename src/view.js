@@ -5,9 +5,9 @@ import { View as ClickView } from './widgets/counter'
 
 // import Dropdown from './widgets/dropdown'
 
-const options = [
-  'one', 'two', 'three'
-]
+// const options = [
+//   'one', 'two', 'three'
+// ]
 
 export default ({ model }) =>
 

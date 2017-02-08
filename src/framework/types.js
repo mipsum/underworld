@@ -1,5 +1,7 @@
 import Type from './union-type'
-import flyd from './flyd'
+import flyd from './stream'
+
+import curryN from 'ramda/src/curryN'
 
 export const any = () => true
 export const none = () => false
@@ -26,7 +28,7 @@ Maybe.prototype.map =
   }
 
 export let maybeToValue =
-  flyd.curryN(3,
+  curryN(3,
     (Just, Nothing, maybe) => maybe.case({ Nothing, Just })
   )
 
@@ -50,4 +52,4 @@ let _resultToValue =
     result.case({ Err, Ok })
 
 export let resultToValue =
-  flyd.curryN(3, _resultToValue)
+  curryN(3, _resultToValue)

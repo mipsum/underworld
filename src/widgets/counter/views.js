@@ -2,7 +2,7 @@
 // eslint-disable-next-line
 import Inferno, { linkEvent } from 'inferno'
 
-import flyd from 'fw/flyd'
+import stream from 'fw/stream'
 
 import { Maybe } from 'fw/types'
 import { Action } from './types'
@@ -10,7 +10,7 @@ import { Action } from './types'
 import dispatcher$ from 'fw'
 
 export let click$ =
-  flyd.stream(Action.Increment(Maybe.Nothing()))
+  stream(Action.Increment(Maybe.Nothing()))
 
 click$.map(dispatcher$)
 

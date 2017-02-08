@@ -1,8 +1,5 @@
 import flyd from 'flyd'
 
-import deepFreeze from './deep-freeze'
-
-
 export let stream =
   (...args) => {
     let st = flyd.stream(...args)

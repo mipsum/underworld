@@ -3,14 +3,17 @@
 // https://github.com/substack/deep-freeze/blob/master/index.js
 // commit: 566d4e7
 
-let isFrozen = Object.isFrozen
 
-let shouldDeepFreeze =
-  (o, prop) =>
-    o.hasOwnProperty(prop)
-      && o[prop] !== null
-      && (typeof o[prop] === "object" || typeof o[prop] === "function")
-      && !isFrozen(o[prop])
+if (!__DEV__) {
+  var isFrozen = Object.isFrozen
+
+  var shouldDeepFreeze =
+    (o, prop) =>
+      o.hasOwnProperty(prop)
+        && o[prop] !== null
+        && (typeof o[prop] === "object" || typeof o[prop] === "function")
+        && !isFrozen(o[prop])
+}
 
 
 export default function deepFreeze (o) {

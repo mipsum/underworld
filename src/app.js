@@ -1,28 +1,25 @@
 
 import Inferno from 'inferno'
 
-
-import { dispatcher$ } from 'fw'
 import stream from 'fw/stream'
+
+import run from 'fw/run'
+
 
 import View from './view'
 
 import { init } from './widgets/counter/update'
 
 
-let model$ =
-  stream.scan(dispatcher$.reducer, init(), dispatcher$)
-
-let render = model => {
-  // model.test = 'test'
-  console.log('render:', model)
-  Inferno.render(<View model={ model }/>, document.getElementById('app'))
-}
 
 export default () => {
-  stream.on(render, model$)
+  const elem = document.getElementById('app')
 
+  run(init, model => Inferno.render(<View model={ model }/>, elem))
 }
+
+
+// done --- just tests from now on
 
 
 let list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]

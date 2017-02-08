@@ -28,6 +28,10 @@ let reducer$ =
   stream.scan(reducerCreator, noopReducer, reducerSink$)
 
 
+export let update =
+  (model, msg) => reducer$()(model, msg)
+
+
 let reducerWrap =
   fn => curryN(2, (model, msg) => {
     if (fn._ctx) {

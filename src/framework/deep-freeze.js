@@ -4,7 +4,7 @@
 // commit: 566d4e7
 
 
-if (!__DEV__) {
+if (__DEV__) {
   var isFrozen = Object.isFrozen
 
   var shouldDeepFreeze =

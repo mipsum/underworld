@@ -10,14 +10,14 @@ let location = {}
 let storage = {}
 
 export default curryN(2, function run (init, render) {
+  // let initState =
+  //   init({ location, storage })
+  //
+  // let model$ =
+  //   stream.scan(update, initState, dispatcher$)
+  //
+  // stream.on(render, model$)
 
-  let initState = init({ location, storage })
-
-  let model$ =
-    stream.scan(update, initState, dispatcher$)
-
-  return stream.on(render, model$)
-
-  // ()
+  return stream.on(render, stream.scan(update, init(storage, location), dispatcher$))
 
 })

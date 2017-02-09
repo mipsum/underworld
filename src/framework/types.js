@@ -1,5 +1,4 @@
 import Type from './union-type'
-import flyd from './stream'
 
 import curryN from 'ramda/src/curryN'
 
@@ -47,9 +46,8 @@ Result.prototype.map =
     }, this)
   }
 
-let _resultToValue =
-  (Ok, Err, result) =>
-    result.case({ Err, Ok })
 
 export let resultToValue =
-  curryN(3, _resultToValue)
+  curryN(3,
+    (Ok, Err, result) => result.case({ Err, Ok })
+  )

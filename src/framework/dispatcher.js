@@ -25,7 +25,7 @@ let reducerSink$ =
 
 
 let reducer$ =
-  stream.scan(reducerCreator, noopReducer, reducerSink$)
+  reducerSink$.scan(reducerCreator, noopReducer)
 
 
 export let update =

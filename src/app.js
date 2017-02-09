@@ -46,7 +46,19 @@ let batched = st
   .map(v => v * 2)
   .batch((acc, v) => acc + v, 0)
 
-batched.map(v => console.log('02:', v))
+batched.map(v => console.log('batched1:', v))
+
+
+
+let scanned = st
+  .map(v => v + 1)
+  .filter(v => !(v % 2))
+  .map(v => v * 2)
+  .scan((acc, v) => acc + v, 0)
+
+
+scanned.map(v => console.log('scanned1:', v))
+
   // .map()
 
 list.forEach(st)
@@ -54,8 +66,14 @@ list.forEach(st)
 
 // let ans2 = batched.flush()
 
-console.log('01:', ans1)
-batched.flush()
+console.log('std:', ans1)
+console.log('batched2:', batched.flush(0))
+console.log('scanned2:', scanned.flush(0))
+
+list.forEach(st)
+
+console.log('batched3:', batched.flush())
+console.log('scanned3:', scanned.flush())
 
 // batched.map(v => console.log('02:', v))
 

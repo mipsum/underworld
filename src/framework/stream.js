@@ -25,10 +25,6 @@ export let on =
   curryN(2, (a, b) => wrapStream(flyd.on(a, b)))
 
 
-export let scan =
-    curryN(3, (a, b, c) => wrapStream(flyd.scan(a, b, c)))
-
-
 export let merge =
   curryN(2, (a, b) => wrapStream(flyd.merge(a, b)))
 
@@ -38,48 +34,9 @@ export let transduce =
 
 
 
-// TODO: test this new maps
-export let map =
-  curryN(2, function map (fn, s) {
-    let st = stream()
-
-    s.map(st)
-
-    return st
-  })
-
-export let filter =
-  curryN(2, function filter (fn, s) {
-    let st = stream()
-
-    s.map(v => fn(v) ? st(v) : void 0)
-
-    return st
-  })
-
-export let batch =
-  curryN(3, function batch (fn, acc, s) {
-    let st = stream()
-
-    st.flush = function flush (_acc) {
-      let res = st(acc)
-
-      if (arguments.length > 0) {
-        acc = _acc
-      }
-
-      return res()
-    }
-
-    s.map(v => acc = fn(acc, v))
-
-    return st
-  })
-
-
 export default Object.assign(stream, {
-  combine, immediate, endsOn, on, scan, merge, transduce,
-  map, filter, batch,
+  combine, immediate, endsOn, on, merge, transduce,
+  // map, filter, batch, scan
 })
 
 
@@ -138,10 +95,58 @@ let boundScan = curryN(2, function _boundScan (f, acc) {
 
 
 function wrapStream (s) {
-  return Object.assign(s, {
-    batch: boundBatch,
-    filter: boundFilter,
-    map: boundMap,
-    scan: boundScan,
-  })
+  s.map = boundMap
+  s.scan = boundScan
+  s.batch = boundBatch
+  s.filter = boundFilter
+
+  return s
 }
+
+
+
+
+
+// // TODO: test this new maps
+//
+//
+// export let scan =
+//     curryN(3, (a, b, c) => wrapStream(flyd.scan(a, b, c)))
+//
+//
+// export let map =
+//   curryN(2, function map (fn, s) {
+//     let st = stream()
+//
+//     s.map(st)
+//
+//     return st
+//   })
+//
+// export let filter =
+//   curryN(2, function filter (fn, s) {
+//     let st = stream()
+//
+//     s.map(v => fn(v) ? st(v) : void 0)
+//
+//     return st
+//   })
+//
+// export let batch =
+//   curryN(3, function batch (fn, acc, s) {
+//     let st = stream()
+//
+//     st.flush = function flush (_acc) {
+//       let res = st(acc)
+//
+//       if (arguments.length > 0) {
+//         acc = _acc
+//       }
+//
+//       return res()
+//     }
+//
+//     s.map(v => acc = fn(acc, v))
+//
+//     return st
+//   })

@@ -153,14 +153,7 @@ function * _applyMiddleware (model, msg) {
     // send model to view here
     // outbound stream send here
 
-    // eslint-disable-next-line
-    ;[model, msg] = yield next => {
-      inbound$.map(v => {
-        inbound$ = stream()
-        next(null, v)
-        return v
-      })
-    }
+    ;[model, msg] = yield inboundYielder
 
     i = genList.length
 
@@ -191,6 +184,13 @@ function * _applyMiddleware (model, msg) {
 }
 
 
+function inboundYielder (next) {
+  inbound$.map(v => {
+    inbound$ = stream()
+    next(null, v)
+    return v
+  })
+}
 
 
 

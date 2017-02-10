@@ -1,4 +1,9 @@
 
+// co v3.10
+//
+// changes:
+// move try catch out from next function into its own function.
+
 /**
  * slice() reference.
  */
@@ -38,7 +43,8 @@ function co(fn) {
       var hasCallback = len && 'function' === typeof args[len - 1];
       done = hasCallback ? args.pop() : error;
       gen = fn.apply(this, args);
-    } else {
+    }
+    else {
       done = done || error;
     }
 
@@ -54,28 +60,12 @@ function co(fn) {
     }
 
     function next(err, res) {
-      var ret;
-
       // multiple args
       if (arguments.length > 2) res = slice.call(arguments, 1);
 
-      // error
-      if (err) {
-        try {
-          ret = gen.throw(err);
-        } catch (e) {
-          return exit(e);
-        }
-      }
+      let ret = tryCatchGen(err, gen, res, exit)
 
-      // ok
-      if (!err) {
-        try {
-          ret = gen.next(res);
-        } catch (e) {
-          return exit(e);
-        }
-      }
+      if (!ret) { return }
 
       // done
       if (ret.done) return exit(null, ret.value);
@@ -86,19 +76,7 @@ function co(fn) {
       // run
       if ('function' === typeof ret.value) {
         var called = false;
-        try {
-          ret.value.call(ctx, function(){
-            if (called) return;
-            called = true;
-            next.apply(ctx, arguments);
-          });
-        } catch (e) {
-          setImmediate(function(){
-            if (called) return;
-            called = true;
-            next(e);
-          });
-        }
+        tryCatchThunk(ctx, called, ret, next, args)
         return;
       }
 
@@ -106,6 +84,45 @@ function co(fn) {
       next(new TypeError('You may only yield a function, promise, generator, array, or object, '
         + 'but the following was passed: "' + String(ret.value) + '"'));
     }
+  }
+}
+
+function tryCatchGen (err, gen, res, exit) {
+  let ret
+  // error
+  if (err) {
+    try {
+      ret = gen.throw(err);
+    } catch (e) {
+      return exit(e);
+    }
+  }
+
+  // ok
+  if (!err) {
+    try {
+      ret = gen.next(res);
+    } catch (e) {
+      return exit(e);
+    }
+  }
+
+  return ret
+}
+
+function tryCatchThunk (ctx, called, ret, next, args) {
+  try {
+    ret.value.call(ctx, function(){
+      if (called) return;
+      called = true;
+      next.apply(ctx, arguments);
+    });
+  } catch (e) {
+    setImmediate(function(){
+      if (called) return;
+      called = true;
+      next(e);
+    });
   }
 }
 

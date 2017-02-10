@@ -54,12 +54,44 @@ dispatcher$.store =
 let inbound$ =
   stream()
 
-let outbound$ =
+export let outbound$ =
   stream()
 
+
+let applyMiddleware =
+  co(_applyMiddleware)
+
+
+let payload = []
+let isFirstRun = true
 export let update =
   curryN(2, (model, msg) => {
-    return reducer$()(model, msg)
+    console.log('up', model.value, msg._name)
+
+    if (isFirstRun) {
+
+      isFirstRun = false
+
+      // first run
+      applyMiddleware(model, msg, (err, ok) => {
+        // better logic if err
+        if (err) { throw err }
+        console.log('shouldn\'t have finished', ok)
+      })
+
+      return
+
+    }
+
+    // console.log('444444', msg._name)
+
+    inbound$([model, msg])
+    // console.log('!!!!!!!!33344455')
+
+
+    // return model
+
+    // return reducer$()(model, msg)
   })
 
 
@@ -68,8 +100,22 @@ dispatcher$.middleware =
   genFn => genList.push(genFn)
 
 
-let applyMiddleware =
-  curryN(2, co(_applyMiddleware))
+
+dispatcher$.middleware(function * logger (model, msg) {
+
+  while (true) {
+    console.warn(['in', model.value, msg._name])
+
+    model = yield model
+
+    console.warn(['out', model.value, msg._name])
+
+    model = yield model
+  }
+
+
+
+})
 
 // 1st [model, msg]
 //    inbound to middleware, must call using co
@@ -87,15 +133,17 @@ function * _applyMiddleware (model, msg) {
   let i = len
   let n = 0
   let list = []
+  let payload
 
 
+  // console.log('mid', len, genList)
   // the return model from 1st iter its passed into the second iter
   // the 1st special prep runs
   while (i--) {
     n = len - (i + 1)
 
     // just init the iter
-    list[n] = list[n](model, msg)
+    list[n] = genList[n](model, msg)
 
     model = list[n].next().value
 
@@ -109,22 +157,76 @@ function * _applyMiddleware (model, msg) {
     }
   }
 
+
+  model = outbound$(reducer$()(model, msg))()
+
+  // console.log('$$$$$', model, msg)
+
   // app loop
   while (true) {
+
+    i = len
+
+    //after update
+    while (i--) {
+
+      n = len - (i + 1)
+
+      model = list[n].next(model).value
+
+      if ('function' === typeof model) {
+        model = yield model
+      }
+
+      if (model && 'function' === typeof model.then) {
+        model = yield model
+      }
+
+
+    }
+
     // after update loop
 
     // send model to view here
     // outbound stream send here
 
-    yield next => {
+    let payload = yield next => {
+      console.log('sleeping')
+      inbound$.map(v => next(null, v))
+
       // inbound stream here
       // it returns the [model, msg]
 
 
       // reducer$()(model, msg)
     }
+    console.log('out', payload[1]._name)
+
+    i = len
+
+    console.log('8678867', len)
+    //
+    // pre update
+    while (i--) {
+
+      n = len - (i + 1)
+
+      model = list[n].next(model).value
+
+      if ('function' === typeof model) {
+        model = yield model
+      }
+
+      if (model && 'function' === typeof model.then) {
+        model = yield model
+      }
+
+    }
+
 
     // pre update loop
+    model = outbound$(reducer$()(payload[0], payload[1]))()
+    // dispatcher$(payload[1])
 
     // call update here
 

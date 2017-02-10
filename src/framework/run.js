@@ -1,7 +1,7 @@
 
 import curryN from 'ramda/src/curryN'
 
-import dispatcher$, { update } from './dispatcher'
+import dispatcher$, { update, outbound$ } from './dispatcher'
 import stream from './stream'
 
 
@@ -10,16 +10,13 @@ let location = {}
 let storage = {}
 
 export default curryN(2, function run (init, render) {
-  // let initState =
-  //   init({ location, storage })
-  //
-  // let model$ =
-  //   stream.scan(update, initState, dispatcher$)
-  //
-  // stream.on(render, model$)
 
+  let model = init(storage, location)
 
+  stream.on(msg => update(model, msg), dispatcher$)
 
-  return stream.on(render, dispatcher$.scan(update, init(storage, location)))
+  outbound$.map(m => model = m)
+
+  return stream.on(render, outbound$)
 
 })

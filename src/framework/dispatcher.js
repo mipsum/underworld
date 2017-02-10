@@ -66,20 +66,19 @@ let isFirstRun = true
 export let update =
   curryN(2, (model, msg) => {
 
-    if (isFirstRun) {
-      isFirstRun = false
-
-      // first run
-      applyMiddleware(model, msg, (err, ok) => {
-        // better logic if err
-        if (err) { throw err }
-        console.log('shouldn\'t have finished', ok)
-      })
-
+    if (!isFirstRun) {
+      inbound$([model, msg])
       return
+
     }
 
-    inbound$([model, msg])
+    isFirstRun = false
+
+    // first run
+    applyMiddleware(model, msg)
+
+    return
+
   })
 
 

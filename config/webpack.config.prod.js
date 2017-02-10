@@ -267,7 +267,9 @@ module.exports = {
         reduce_vars: true,
       },
       mangle: {
-        screw_ie8: true
+        screw_ie8: true,
+        except: ['GeneratorFunction'] // bug on minifying
+
       },
       output: {
         comments: false,
@@ -295,6 +297,6 @@ module.exports = {
   node: {
     fs: 'empty',
     net: 'empty',
-    tls: 'empty'
+    tls: 'empty',
   }
 };

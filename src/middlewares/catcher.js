@@ -7,8 +7,6 @@ let catcher =
   cfg =>
     function * _catcher (model, msg) {
 
-      console.log('7567756576')
-
       try {
         while (true) {
           // pre update reducers

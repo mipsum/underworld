@@ -48,12 +48,8 @@ function co(fn) {
     // wrap the callback in a setImmediate
     // so that any of its errors aren't caught by `co`
     function exit(err, res) {
-      console.log('======', err, res)
       setImmediate(function(){
-        console.log('^^^^^', done)
-        if (done && 'function' === typeof done.call) {
-          done.call(ctx, err, res);
-        }
+        done.call(ctx, err, res);
       });
     }
 

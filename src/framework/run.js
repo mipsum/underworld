@@ -10,7 +10,6 @@ let location = {}
 let storage = {}
 
 export default curryN(2, function run (init, render) {
-
   let model = init(storage, location)
 
   stream.on(msg => update(model, msg), dispatcher$)

@@ -120,10 +120,15 @@
     ]
   },
   "eslintConfig": {
-    "extends": "inferno-app",
+    "extends": [
+      "inferno-app"
+    ],
     "globals": {
       "log": true,
       "__DEV__": true
+    },
+    "rules": {
+      "no-unexpected-multiline": 2
     }
   }
 }

@@ -3,7 +3,7 @@ import Inferno from 'inferno'
 // import stream from 'fw/stream'
 import run from 'fw/run'
 
-// import './middlewares'
+import './middlewares'
 
 import View from './view'
 

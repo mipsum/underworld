@@ -1,34 +1,47 @@
-// eslint-disable-next-line
+import dispatcher$ from 'fw/dispatcher'
 
-import { dispatcher$ } from 'fw'
+// TODO: test this middleware
+let logger =
+  cfg =>
+    function * _logger (model, msg) {
 
-function loggerPrint (str, model, msg) {
-  return model => msg => {
-    console.log('\n')
-    console.log([currentDate()])
-    console.log([str, msg._name, msg], model)
-    console.log('\n')
+      while (true) {
+        loggerPrint('in', model, msg)
 
-    return model
-  }
-}
+        ;[model, msg] = yield [model, msg]
 
-export function logger () {
-  return [
-    loggerPrint('log entry:'),
-    loggerPrint(' log exit:'),
-  ]
-}
+        loggerPrint('out', model, msg)
+
+        ;[model, msg] = yield [model, msg]
+      }
+
+    }
 
 dispatcher$.middleware(logger({ verbose: true }))
 
 
+function loggerPrint (str, model, msg) {
+  if (__DEV__) {
+    console.log('\n')
+    console.log([currentDate()])
+    console.log([str, msg._name, msg], model)
+    console.log('\n')
+    return
+  }
+
+  // some fance loggin in prod goes here
+
+}
+
+
+
+
 // http://www.w3schools.com/jsref/jsref_getmilliseconds.asp
 function addZero(x, n) {
-    while (x.toString().length < n) {
-        x = "0" + x;
-    }
-    return x;
+  while (x.toString().length < n) {
+      x = "0" + x;
+  }
+  return x;
 }
 
 function currentDate() {

@@ -3,6 +3,7 @@ import deepFreeze from './deep-freeze'
 import stream from './stream'
 import curryN from 'ramda/src/curryN'
 
+import co from './co'
 
 
 let dispatcher$ =
@@ -17,7 +18,7 @@ let reducerCreator =
 
 
 let noopReducer =
-  (model, msg) => log('first noop reducer:', model)
+  m => m
 
 
 let reducerSink$ =
@@ -25,22 +26,12 @@ let reducerSink$ =
 
 
 let reducer$ =
-  reducerSink$.scan(reducerCreator, noopReducer)
+  reducerSink$.scan(reducerCreator, noopReducer)(noopReducer) // initializing
 
-
-export let update =
-  (model, msg) => reducer$()(model, msg)
 
 
 let reducerWrap =
   fn => curryN(2, (model, msg) => {
-    if (fn._ctx) {
-      return fn._ctx.prototype.isPrototypeOf(msg)
-        // the order of args is a bit different this case
-        ? fn(msg, model)
-        : model
-    }
-
     let f = fn(model)
 
     if (!f._ctx) {
@@ -56,9 +47,92 @@ let reducerWrap =
   })
 
 
-dispatcher$.reducer =
-  (model, msg) => reducer$()(model, msg)
-
-
 dispatcher$.store =
-  fn => { reducerSink$(reducerWrap(fn)) }
+  curryN(1, fn => { reducerSink$(reducerWrap(fn)) })
+
+
+let update$ =
+  stream()
+
+
+export let update =
+  curryN(2, (model, msg) => {
+    return reducer$()(model, msg)
+  })
+
+
+let genList = []
+dispatcher$.middleware =
+  genFn => genList.push(genFn)
+
+
+let applyMiddleware =
+  curryN(2, co(_applyMiddleware))
+
+// 1st [model, msg]
+//    inbound to middleware, must call using co
+//    outbound to update must be with stream
+
+// 2nd ... [model, msg]
+//    inbound to middleware, must use stream
+//    outbound to update must be with stream
+
+// must re-use the same array to send data in and out
+// to avoid allocations
+
+function * _applyMiddleware (model, msg) {
+  let len = genList.length
+  let i = len
+  let n = 0
+  let list = []
+
+
+  // the return model from 1st iter its passed into the second iter
+  // the 1st special prep runs
+  while (i--) {
+    n = len - (i + 1)
+
+    // just init the iter
+    list[n] = list[n](model, msg)
+
+    model = list[n].next().value
+
+
+    if ('function' === typeof model) {
+      model = yield model
+    }
+
+    if (model && 'function' === typeof model.then) {
+      model = yield model
+    }
+  }
+
+  // app loop
+  while (true) {
+    // after update loop
+
+    // send model to view here
+    // outbound stream send here
+
+    yield next => {
+      // inbound stream here
+      // it returns the [model, msg]
+
+
+      // reducer$()(model, msg)
+    }
+
+    // pre update loop
+
+    // call update here
+
+  }
+
+}
+
+
+
+
+
+
+//

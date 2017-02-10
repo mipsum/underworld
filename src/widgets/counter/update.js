@@ -8,8 +8,6 @@ import { Action } from './types'
 
 import { dispatcher$ } from 'fw'
 
-
-
 let inc : Function =
   maybeToValue(v => v, () => 0)
 

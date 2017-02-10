@@ -127,14 +127,13 @@ function * _applyMiddleware (model, msg) {
   }
 
 
-  model = outbound$(reducer$()(model, msg))()
+  model = reducer$()(model, msg)
 
   // main loop
   while (true) {
+    i = genList.length
 
-    i = len
-
-    //after update
+    //after update reducing fn is done.
     while (i--) {
       ret = list[i].next([model, msg]).value
 
@@ -148,24 +147,23 @@ function * _applyMiddleware (model, msg) {
       else {
         [model, msg] = ret
       }
-
-
     }
 
-    // after update loop
 
+    outbound$(model)
     // send model to view here
     // outbound stream send here
-    // break here. only when there is an action is when the next cicle continues
-    msg = yield next => {
-      stream.on(msg => next(null, msg), dispatcher$)
-    }
 
+    // eslint-disable-next-line
     ;[model, msg] = yield next => {
-      inbound$.map(v => next(null, v))
+      inbound$.map(v => {
+        inbound$ = stream()
+        next(null, v)
+        return v
+      })
     }
 
-    i = len
+    i = genList.length
 
     //
     // pre update loop
@@ -186,8 +184,8 @@ function * _applyMiddleware (model, msg) {
     }
 
 
-    // call update here
-    model = outbound$(reducer$()(model, msg))()
+    // call update reducing fn here
+    model = reducer$()(model, msg)
 
   }
 

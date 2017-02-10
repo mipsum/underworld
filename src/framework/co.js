@@ -48,8 +48,12 @@ function co(fn) {
     // wrap the callback in a setImmediate
     // so that any of its errors aren't caught by `co`
     function exit(err, res) {
+      console.log('======', err, res)
       setImmediate(function(){
-        done.call(ctx, err, res);
+        console.log('^^^^^', done)
+        if (done && 'function' === typeof done.call) {
+          done.call(ctx, err, res);
+        }
       });
     }
 
@@ -154,6 +158,7 @@ function toThunk(obj, ctx) {
 function objectToThunk(obj){
   var ctx = this;
   var isArray = Array.isArray(obj);
+  var i;
 
   return function(done){
     var keys = Object.keys(obj);
@@ -162,7 +167,6 @@ function objectToThunk(obj){
       ? new Array(pending) // predefine the array length
       : new obj.constructor();
     var finished;
-    var i;
 
     if (!pending) {
       setImmediate(function(){

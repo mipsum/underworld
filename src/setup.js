@@ -1,5 +1,7 @@
 let log = (msg, o) => {
-  console.log(msg, o)
+  if (__DEV__) {
+    console.log(msg, o)
+  }
   return o
 }
 

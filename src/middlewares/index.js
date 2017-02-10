@@ -7,50 +7,129 @@ import './logger'
 
 
 // lame async test
-dispatcher$.middleware(function * (model, msg) {
+let i = 1000
+let shouldSleep = false
+let shouldLog = false
+let shouldPromise = false
+let shouldThunk = true
 
-  while (true) {
-    console.log('pre thunk')
-    ;[model, msg] = yield next => {
-      setTimeout(() => {
-        console.log('SS')
-        next(null, [model, msg])
-      }, 200)
-    }
+while (i--) {
 
-    console.log('pos thunk')
+  if (shouldThunk) {
+    dispatcher$.middleware(function * thunkStyle (iterRetVal) {
 
-    ;[model, msg] = yield next => {
-      setTimeout(() => {
-        console.log('XX')
-        next(null, [model, msg])
-      }, 200)
-    }
+      while (true) {
+        if (shouldLog) {
+          console.log('pre thunk')
+        }
 
-  }
-})
+        iterRetVal = yield next => {
+          if (shouldSleep) {
+            setTimeout(() => {
+              if (shouldLog) {
+                console.log('00')
+              }
+              next(null, iterRetVal)
+            }, 200)
+          }
+          else {
+            if (shouldLog) {
+              console.log('00')
+            }
+            // setImmediate(() => {
+              next(null, iterRetVal)
+            // })
+          }
+
+        }
+
+        if (shouldLog) {
+          console.log('pos thunk')
+        }
 
 
+        ;iterRetVal = yield next => {
+          if (shouldSleep) {
+            setTimeout(() => {
+              if (shouldLog) {
+                console.log('01')
+              }
+              next(null, iterRetVal)
+            }, 200)
+          }
+          else {
+            if (shouldLog) {
+              console.log('01')
+            }
+            next(null, iterRetVal)
+          }
+        }
 
-dispatcher$.middleware(function * (model, msg) {
-
-  while (true) {
-    console.log('pre promise')
-    ;[model, msg] = yield new Promise((res, rej) => {
-      setTimeout(() => {
-        console.log('WW')
-        res([model, msg])
-      }, 200)
+      }
     })
 
-    console.log('pos promise')
+  }
 
-    ;[model, msg] = yield new Promise((res, rej) => {
-      setTimeout(() => {
-        console.log('QQ')
-        res([model, msg])
-      }, 200)
+
+  if (shouldPromise) {
+    dispatcher$.middleware(function * promiseStyle (iterRetVal) {
+
+      while (true) {
+
+        if (shouldLog) {
+          console.log('pre promise')
+        }
+
+        if (shouldSleep) {
+          ;iterRetVal = yield new Promise((res, rej) => {
+            setTimeout(() => {
+              if (shouldLog) {
+                console.log('02')
+              }
+              res(iterRetVal)
+            }, 200)
+          })
+
+        }
+        else {
+          if (shouldLog) {
+            console.log('02')
+          }
+
+          iterRetVal = yield Promise.resolve(iterRetVal)
+        }
+
+
+
+        if (shouldLog) {
+          console.log('pos promise')
+        }
+
+
+
+        if (shouldSleep) {
+          ;iterRetVal = yield new Promise((res, rej) => {
+            setTimeout(() => {
+              if (shouldLog) {
+                console.log('03')
+              }
+              res(iterRetVal)
+            }, 200)
+          })
+
+        }
+        else {
+          if (shouldLog) {
+            console.log('03')
+          }
+
+          iterRetVal = yield Promise.resolve(iterRetVal)
+        }
+
+      }
     })
 
   }
-})
+
+
+}

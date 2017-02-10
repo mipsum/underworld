@@ -5,15 +5,15 @@ import { dispatcher$ } from 'fw'
 // TODO: test this middleware
 let catcher =
   cfg =>
-    function * _catcher (model, msg) {
+    function * _catcher (iterRetVal) {
 
       try {
         while (true) {
           // pre update reducers
-          ;[model, msg] = yield [model, msg]
+          iterRetVal = yield iterRetVal
 
           // pos update reducers
-          ;[model, msg] = yield [model, msg]
+          iterRetVal = yield iterRetVal
         }
       }
       catch (e) {

@@ -3,23 +3,31 @@ import dispatcher$ from 'fw/dispatcher'
 // TODO: test this middleware
 let logger =
   cfg =>
-    function * _logger (model, msg) {
+    function * _logger (iterRetVal) {
 
       while (true) {
-        loggerPrint('in', model, msg)
+        if (__DEV__) {
+          console.warn('/---------------------------------\\')
+        }
+        loggerPrint('in', iterRetVal[0], iterRetVal[1])
 
-        ;[model, msg] = yield [model, msg]
+        iterRetVal = yield iterRetVal
 
-        loggerPrint('out', model, msg)
+        loggerPrint('out', iterRetVal[0], iterRetVal[1])
 
-        ;[model, msg] = yield [model, msg]
+        if (__DEV__) {
+          console.warn('\\---------------------------------/')
+        }
+
+
+        iterRetVal = yield iterRetVal
       }
 
     }
 
 dispatcher$.middleware(logger({ verbose: true }))
 
-
+global._perf = []
 function loggerPrint (str, model, msg) {
   if (__DEV__) {
     console.log('\n')
@@ -28,6 +36,14 @@ function loggerPrint (str, model, msg) {
     console.log('\n')
     return
   }
+
+  if (global._perf.length > 15) {
+    global._perf = []
+  }
+
+  global._perf.push([currentDate(), str, msg._name, msg, model])
+
+
 
   // some fance loggin in prod goes here
 

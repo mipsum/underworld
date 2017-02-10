@@ -54,6 +54,7 @@ dispatcher$.store =
 let inbound$ =
   stream()
 
+
 export let outbound$ =
   stream()
 
@@ -84,7 +85,15 @@ export let update =
 
 let genList = []
 dispatcher$.middleware =
-  genFn => genList.unshift(genFn)
+  genFn => {
+    if (__DEV__) {
+      if (!isFirstRun) {
+        throw new Error('can\'t added midleware at run time')
+      }
+    }
+
+    genList.unshift(genFn)
+  }
 
 
 // 1st [model, msg]
@@ -102,82 +111,84 @@ function * _applyMiddleware (model, msg) {
   let len = genList.length
   let i = len
   let list = []
-  let ret
+  let iterRetVal = [model, msg]
 
   // the return model from 1st iter its passed into the second iter
   // the 1st special prep runs
   while (i--) {
 
-    // just init the iter
-    list[i] = genList[i](model, msg)
+    // just init the iter. looping backwards
+    list[i] = genList[i](iterRetVal)
 
-    ret = list[i].next().value
+    iterRetVal = list[i].next().value
 
-    if ('function' === typeof ret) {
-      [model, msg] = yield ret
+    // thunk
+    if ('function' === typeof iterRetVal) {
+      iterRetVal = yield iterRetVal
     }
 
-    else if (ret && 'function' === typeof ret.then) {
-      [model, msg] = yield ret
+    // promise
+    if (iterRetVal && 'function' === typeof iterRetVal.then) {
+      iterRetVal = yield iterRetVal
     }
-    else {
-      [model, msg] = ret
-    }
+
+    // justa data
+    // else {
+    //   [model, msg] = ret
+    // }
   }
 
-
-  model = reducer$()(model, msg)
+  // calling update reducers here
+  iterRetVal[0] = reducer$()(iterRetVal[0], iterRetVal[1])
 
   // main loop
   while (true) {
-    i = genList.length
+    i = len
 
-    //after update reducing fn is done.
+    //after update reducing fn is done. finish middlewares
     while (i--) {
-      ret = list[i].next([model, msg]).value
+      // looping foward
+      iterRetVal = list[len - (i + 1)].next(iterRetVal).value
 
-      if ('function' === typeof ret) {
-        [model, msg] = yield ret
+      if ('function' === typeof iterRetVal) {
+        iterRetVal = yield iterRetVal
       }
 
-      else if (ret && 'function' === typeof ret.then) {
-        [model, msg] = yield ret
+      if (iterRetVal && 'function' === typeof iterRetVal.then) {
+        iterRetVal = yield iterRetVal
       }
-      else {
-        [model, msg] = ret
-      }
+
     }
 
 
-    outbound$(model)
-    // send model to view here
-    // outbound stream send here
+    // send model outbound to the view here
+    outbound$(iterRetVal[0])
 
-    ;[model, msg] = yield inboundYielder
+    iterRetVal = yield inboundYielder
 
-    i = genList.length
+    i = len
 
     //
     // pre update loop
     while (i--) {
-      ret = list[i].next([model, msg]).value
+      iterRetVal = list[i].next(iterRetVal).value
 
-      if ('function' === typeof ret) {
-        [model, msg] = yield ret
+      if ('function' === typeof iterRetVal) {
+        iterRetVal = yield iterRetVal
       }
 
-      else if (ret && 'function' === typeof ret.then) {
-        [model, msg] = yield ret
+      if (iterRetVal && 'function' === typeof iterRetVal.then) {
+        iterRetVal = yield iterRetVal
       }
-      else {
-        [model, msg] = ret
-      }
+      // else {
+      //   [model, msg] = iterRetVal
+      // }
 
     }
 
 
     // call update reducing fn here
-    model = reducer$()(model, msg)
+    iterRetVal[0] = reducer$()(iterRetVal[0], iterRetVal[1])
 
   }
 
@@ -187,8 +198,7 @@ function * _applyMiddleware (model, msg) {
 function inboundYielder (next) {
   inbound$.map(v => {
     inbound$ = stream()
-    next(null, v)
-    return v
+    return next(null, v)
   })
 }
 

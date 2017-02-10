@@ -33,7 +33,8 @@ export default ({ model }) =>
                 <div class="well">
                   <h4><b>John Doe</b></h4>
                   <p>Architect & Engineers</p>
-                  <ClickView model={log('@@@@@@ view', model.value)}/>
+                  {/* <ClickView model={log('@@@@@@ view', model.value)}/> */}
+                  <ClickView model={model.value}/>
 
                   <button class="button button-black button-outline">
                     some btn

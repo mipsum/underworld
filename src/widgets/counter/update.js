@@ -20,9 +20,11 @@ export let update =
   ({ value }) =>
     Action.case({
       Increment: maybe =>
+        // ({ value: value + inc(maybe) }),
         log('inc', ({ value: value + inc(maybe) })),
 
       Decrement: maybe =>
+        // ({ value: value - inc(maybe) }),
         log('dec', ({ value: value - inc(maybe) })),
     })
 

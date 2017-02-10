@@ -31,6 +31,19 @@ export default ({ model }) =>
                 </div>
 
                 <div class="well">
+                  <h4><b>John Doe</b></h4>
+                  <p>Architect & Engineers</p>
+                  <ClickView model={model.value}/>
+
+                  <button class="button button-black button-outline">
+                    some btn
+                  </button>
+
+                  <ClickView model={model.value}/>
+
+                </div>
+
+                <div class="well">
 
                    {/* <Dropdown options={options} onChange={s => log('drop changed', s)} value={'two'} placeholder="Select an option" /> */}
 
@@ -67,18 +80,7 @@ export default ({ model }) =>
 
                 </div>
 
-                <div class="well">
-                  <h4><b>John Doe</b></h4>
-                  <p>Architect & Engineers</p>
-                  <ClickView model={model.value}/>
 
-                  <button class="button button-black button-outline">
-                    some btn
-                  </button>
-
-                  <ClickView model={model.value}/>
-
-                </div>
 
               {/* </div> */}
             {/* </div> */}

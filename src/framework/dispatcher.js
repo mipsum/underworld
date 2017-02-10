@@ -51,9 +51,11 @@ dispatcher$.store =
   curryN(1, fn => { reducerSink$(reducerWrap(fn)) })
 
 
-let update$ =
+let inbound$ =
   stream()
 
+let outbound$ =
+  stream()
 
 export let update =
   curryN(2, (model, msg) => {

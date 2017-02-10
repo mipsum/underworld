@@ -1,6 +1,6 @@
 
 import Inferno from 'inferno'
-import stream from 'fw/stream'
+// import stream from 'fw/stream'
 import run from 'fw/run'
 
 // import './middlewares'

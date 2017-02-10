@@ -18,6 +18,8 @@ export default curryN(2, function run (init, render) {
   //
   // stream.on(render, model$)
 
+
+
   return stream.on(render, dispatcher$.scan(update, init(storage, location)))
 
 })

@@ -162,6 +162,7 @@ function objectToThunk(obj){
       ? new Array(pending) // predefine the array length
       : new obj.constructor();
     var finished;
+    var i;
 
     if (!pending) {
       setImmediate(function(){
@@ -172,12 +173,12 @@ function objectToThunk(obj){
 
     // prepopulate object keys to preserve key ordering
     if (!isArray) {
-      for (var i = 0; i < pending; i++) {
+      for (i = 0; i < pending; i++) {
         results[keys[i]] = undefined;
       }
     }
 
-    for (var i = 0; i < keys.length; i++) {
+    for (i = 0; i < keys.length; i++) {
       run(obj[keys[i]], keys[i]);
     }
 
@@ -186,7 +187,7 @@ function objectToThunk(obj){
       try {
         fn = toThunk(fn, ctx);
 
-        if ('function' != typeof fn) {
+        if ('function' !== typeof fn) {
           results[key] = fn;
           return --pending || done(null, results);
         }

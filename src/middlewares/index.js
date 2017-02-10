@@ -7,10 +7,10 @@ import './logger'
 
 
 // lame async test
-let i = 1000
-let shouldSleep = false
-let shouldLog = false
-let shouldPromise = false
+let i = 1
+let shouldSleep = true
+let shouldLog = true
+let shouldPromise = true
 let shouldThunk = true
 
 while (i--) {

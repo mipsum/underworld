@@ -33,9 +33,34 @@ export let transduce =
   curryN(2, (a, b) => wrapStream(flyd.transduce(a, b)))
 
 
+export let reset =
+  st => {
+    st.hasVal = false
+  }
+
+
+export let thunk =
+  fn => {
+    // console.log('----####')
+
+    // let thunk =
+    //   next => {
+    //
+    //   }
+
+    // thunk.then()
+
+    // let handler =
+      // next => {}
+      //
+      //
+      // return handler
+  }
+
+
 
 export default Object.assign(stream, {
-  combine, immediate, endsOn, on, merge, transduce,
+  combine, immediate, endsOn, on, merge, transduce, reset, thunk
   // map, filter, batch, scan
 })
 

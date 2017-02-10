@@ -19,3 +19,28 @@ export default curryN(2, function run (init, render) {
   return stream.on(render, outbound$)
 
 })
+
+let st = stream()
+
+// st.map(v => new Promise((res, rej) => {
+//   setTimeout(() => {
+//     res(v)
+//   }, 1000)
+// }))
+
+
+st.map(v => {
+  let st = stream()
+
+  stream.thunk(() => {})
+
+  setTimeout(() => {st(v)}, 1000)
+
+  return st
+})
+
+.map(v => {
+  return console.log('^^^^^^', v)
+})
+
+st('LLLLL')

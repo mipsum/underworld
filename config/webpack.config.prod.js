@@ -9,6 +9,7 @@ var paths = require('./paths');
 var getClientEnvironment = require('./env');
 
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+var Visualizer = require('webpack-visualizer-plugin');
 
 var path = require('path')
 
@@ -292,6 +293,7 @@ module.exports = {
     }),
 
     // new BundleAnalyzerPlugin(),
+    new Visualizer(),
   ],
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.

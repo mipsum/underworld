@@ -44,7 +44,7 @@ module.exports = {
     // require.resolve('webpack/hot/dev-server'),
     require.resolve('inferno-dev-utils/webpackHotDevClient'),
     // We ship a few polyfills by default:
-    path.resolve(BASE_PATH, './src/polyfills'),
+    // path.resolve(BASE_PATH, './src/polyfills'),
     // Finally, this is your app's code:
     paths.appIndexJs,
     // We include the app code last so that if there is a runtime error during
@@ -228,6 +228,7 @@ module.exports = {
   node: {
     fs: 'empty',
     net: 'empty',
-    tls: 'empty'
+    tls: 'empty',
+    process: 'empty',
   }
 };

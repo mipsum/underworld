@@ -11,6 +11,7 @@ var getClientEnvironment = require('./env');
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 var Visualizer = require('webpack-visualizer-plugin');
 
+
 var path = require('path')
 
 var BASE_PATH = path.resolve(__dirname, '..')
@@ -55,13 +56,15 @@ if (env['process.env'].NODE_ENV !== '"production"') {
 module.exports = {
   // Don't attempt to continue if there are any errors.
   bail: true,
+
+  profile: true,
   // We generate sourcemaps in production. This is slow but gives good results.
   // You can exclude the *.map files from the build during deployment.
   devtool: 'source-map',
   // In production, we only want to load the polyfills and the app code.
   entry: [
     // require.resolve('./polyfills'),
-    path.resolve(BASE_PATH, './src/polyfills'),
+    // path.resolve(BASE_PATH, './src/polyfills'),
     paths.appIndexJs
   ],
   output: {
@@ -292,8 +295,22 @@ module.exports = {
       fileName: 'asset-manifest.json'
     }),
 
-    // new BundleAnalyzerPlugin(),
-    new Visualizer(),
+    // to see the `stats.json` go to:
+    //    http://webpack.github.io/analyse/#modules
+
+    new BundleAnalyzerPlugin({
+      reportFilename: 'bundle-analizer.html',
+      analyzerMode: 'static',
+      openAnalyzer: false,
+      generateStatsFile: true,
+      logLevel: 'silent',
+      // Name of Webpack Stats JSON file that will be generated if `generateStatsFile` is `true`.
+      // Relative to bundles output directory.
+      statsFilename: 'stats.json',
+    }),
+    new Visualizer({
+      filename: 'visualizer.html'
+    }),
   ],
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.
@@ -301,5 +318,6 @@ module.exports = {
     fs: 'empty',
     net: 'empty',
     tls: 'empty',
+    process: 'empty',
   }
 };

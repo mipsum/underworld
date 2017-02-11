@@ -1,4 +1,4 @@
-import './polyfills'
+// import './polyfills'
 
 import './setup'
 import 'normalize.css'

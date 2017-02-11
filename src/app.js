@@ -1,3 +1,4 @@
+import './setup'
 
 import Inferno from 'inferno'
 // import stream from 'fw/stream'

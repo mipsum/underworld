@@ -72,16 +72,26 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js --env=jsdom",
+    "test": "node scripts/test.js",
     "flow": "flow",
     "profile": "NODE_ENV=production webpack  --profile --json --config ./config/webpack.config.prod.js > stats.json"
   },
   "jest": {
+    "verbose": true,
+    "globals": {
+      "__DEV__": true
+    },
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/__mocks__/fileMock.js",
+      "\\.(css|scss|sass)$": "<rootDir>/__mocks__/styleMock.js",
+      "^fw/(.*)$": "<rootDir>/src/framework/$1",
+      "^fw$": "<rootDir>/src/framework"
+    },
     "collectCoverageFrom": [
       "src/**/*.{js,jsx}"
     ],
     "setupFiles": [
-      "<rootDir>/config/polyfills.js"
+      "<rootDir>/src/polyfills.js"
     ],
     "testPathIgnorePatterns": [
       "<rootDir>[/\\\\](build|docs|node_modules|scripts)[/\\\\]"

@@ -6,3 +6,14 @@ let log = (msg, o) => {
 }
 
 global.log = log
+
+
+if (!global.requestAnimationFrame) {
+  if (process.nextTick) {
+    global.requestAnimationFrame = process.nextTick
+  }
+  else {
+    global.requestAnimationFrame =
+      f => setTimeout(f, 0)
+  }
+}

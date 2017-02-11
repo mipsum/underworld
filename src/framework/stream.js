@@ -1,6 +1,7 @@
 import flyd from 'flyd'
 import curryN from 'ramda/src/curryN'
 
+
 export let stream =
   (...a) => wrapStream(flyd.stream(...a))
 

@@ -1,6 +1,5 @@
 // import './polyfills'
 
-import './setup'
 import 'normalize.css'
 import 'milligram'
 
@@ -11,6 +10,6 @@ import './app.css'
 
 
 
-import run from './app'
+import runApp from './app'
 
-document.addEventListener("DOMContentLoaded", run)
+document.addEventListener("DOMContentLoaded", runApp)

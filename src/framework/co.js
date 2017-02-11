@@ -158,6 +158,8 @@ function tryCatchGen (err, gen, res, exit) {
 function tryCatchThunk (ctx, ret, next) {
   var called = false
 
+
+
   try {
     ret.value.call(ctx, function () {
       if (called) return

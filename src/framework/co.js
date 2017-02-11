@@ -276,8 +276,9 @@ function isGenerator(obj) {
  * @api private
  */
 
+var GeneratorFunction = (function*(){}).constructor
 function isGeneratorFunction(obj) {
-  return obj && obj.constructor && 'GeneratorFunction' === obj.constructor.name;
+  return obj && obj.constructor && obj instanceof GeneratorFunction;
 }
 
 /**

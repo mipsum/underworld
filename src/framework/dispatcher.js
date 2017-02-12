@@ -87,7 +87,7 @@ dispatcher$.middleware =
   genFn => {
     if (__DEV__) {
       if (!isFirstRun) {
-        throw new Error('can\'t added midleware at run time')
+        throw new Error('can\'t add midleware at run time')
       }
     }
 

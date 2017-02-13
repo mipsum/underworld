@@ -9,17 +9,16 @@
 export function isFunction (obj) {
   return 'function' ===  typeof obj
 }
-
 /**
  * Check if `obj` is a promise.
  *
  * @param {Object} obj
  * @return {Boolean}
- * @api public
+ * @api private
  */
 
 export function isPromise(obj) {
-  return obj && isFunction(obj.then)
+  return obj && 'function' === typeof obj.then;
 }
 
 /**
@@ -27,11 +26,11 @@ export function isPromise(obj) {
  *
  * @param {Mixed} obj
  * @return {Boolean}
- * @api public
+ * @api private
  */
 
 export function isGenerator(obj) {
-  return obj && isFunction(obj.next) && isFunction(obj.throw)
+  return obj && 'function' === typeof obj.next && 'function' === typeof obj.throw;
 }
 
 /**
@@ -39,22 +38,22 @@ export function isGenerator(obj) {
  *
  * @param {Mixed} obj
  * @return {Boolean}
- * @api public
+ * @api private
  */
 
-let GeneratorFunction = (function*(){}).constructor
-export function isGeneratorFunction(obj) {
-  return obj && obj.constructor && obj instanceof GeneratorFunction
-}
+ let GeneratorFunction = (function*(){}).constructor
+ export function isGeneratorFunction(obj) {
+   return obj && obj.constructor && obj instanceof GeneratorFunction
+ }
 
 /**
  * Check for plain object.
  *
  * @param {Mixed} val
  * @return {Boolean}
- * @api public
+ * @api private
  */
 
 export function isObject(val) {
-  return val && Object === val.constructor
+  return val && Object === val.constructor;
 }

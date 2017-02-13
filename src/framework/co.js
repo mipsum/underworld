@@ -1,15 +1,12 @@
+import {
+  isFunction, isPromise, isGenerator, isGeneratorFunction, isObject
+} from './type-check'
 
 /**
  * slice() reference.
  */
 
 var slice = Array.prototype.slice;
-
-/**
- * Expose `co`.
- */
-
-module.exports = co;
 
 /**
  * Wrap the given generator `fn` and
@@ -20,7 +17,7 @@ module.exports = co;
  * @api public
  */
 
-function co(fn) {
+export default function co(fn) {
   var isGenFun = isGeneratorFunction(fn);
 
   return function (done) {
@@ -225,55 +222,6 @@ function promiseToThunk(promise) {
       fn(null, res);
     }, fn);
   }
-}
-
-/**
- * Check if `obj` is a promise.
- *
- * @param {Object} obj
- * @return {Boolean}
- * @api private
- */
-
-function isPromise(obj) {
-  return obj && 'function' === typeof obj.then;
-}
-
-/**
- * Check if `obj` is a generator.
- *
- * @param {Mixed} obj
- * @return {Boolean}
- * @api private
- */
-
-function isGenerator(obj) {
-  return obj && 'function' === typeof obj.next && 'function' === typeof obj.throw;
-}
-
-/**
- * Check if `obj` is a generator function.
- *
- * @param {Mixed} obj
- * @return {Boolean}
- * @api private
- */
-
- let GeneratorFunction = (function*(){}).constructor
- export function isGeneratorFunction(obj) {
-   return obj && obj.constructor && obj instanceof GeneratorFunction
- }
-
-/**
- * Check for plain object.
- *
- * @param {Mixed} val
- * @return {Boolean}
- * @api private
- */
-
-function isObject(val) {
-  return val && Object === val.constructor;
 }
 
 /**

@@ -1,4 +1,4 @@
-import flyd from 'flyd'
+import flyd from './flyd'
 import curryN from 'ramda/src/curryN'
 
 import { isFunction } from './type-check'

@@ -51,31 +51,28 @@ export default function co(fn) {
     }
 
     function next(err, res) {
-      // var ret;
+      var ret;
 
       // multiple args
       if (arguments.length > 2) res = slice.call(arguments, 1);
 
-      let ret = tryCatchGen(err, res, gen, exit)
-
-      if (!ret) { return }
       // error
-      // if (err) {
-      //   try {
-      //     ret = gen.throw(err);
-      //   } catch (e) {
-      //     return exit(e);
-      //   }
-      // }
-      //
-      // // ok
-      // if (!err) {
-      //   try {
-      //     ret = gen.next(res);
-      //   } catch (e) {
-      //     return exit(e);
-      //   }
-      // }
+      if (err) {
+        try {
+          ret = gen.throw(err);
+        } catch (e) {
+          return exit(e);
+        }
+      }
+
+      // ok
+      if (!err) {
+        try {
+          ret = gen.next(res);
+        } catch (e) {
+          return exit(e);
+        }
+      }
 
       // done
       if (ret.done) return exit(null, ret.value);
@@ -86,19 +83,22 @@ export default function co(fn) {
       // run
       if ('function' === typeof ret.value) {
         var called = false;
-        //  tryCatchThunk(ctx, ret, called, next)
         try {
           ret.value.call(ctx, function(){
-            // console.log(called)
+            let _ctx = ctx
+            let _next = next
+
             if (called) return;
             called = true;
-            next.apply(ctx, arguments);
+            _next.apply(_ctx, arguments);
           });
         } catch (e) {
           requestAnimationFrame(function(){
+            let _next = next
+
             if (called) return;
             called = true;
-            next(e);
+            _next(e);
           });
         }
         return;
@@ -108,50 +108,6 @@ export default function co(fn) {
       next(new TypeError('You may only yield a function, promise, generator, array, or object, '
         + 'but the following was passed: "' + String(ret.value) + '"'));
     }
-  }
-}
-
-
-function tryCatchGen (err, res, gen, exit) {
-  // error
-  if (err) {
-    try {
-      return gen.throw(err);
-    } catch (e) {
-      return exit(e);
-    }
-  }
-
-  // ok
-  if (!err) {
-    try {
-      return gen.next(res);
-    } catch (e) {
-      return exit(e);
-    }
-  }
-}
-
-
-// TODO: source of bug !!!
-function tryCatchThunk (_ctx, _ret, _called,  _next) {
-  let called = _called;
-  let ctx = _ctx
-  let ret = _ret
-  let next = _next
-
-  try {
-    ret.value.call(ctx, function(){
-      if (called) return;
-      called = true;
-      next.apply(ctx, arguments);
-    });
-  } catch (e) {
-    requestAnimationFrame(function(){
-      if (called) return;
-      called = true;
-      next(e);
-    });
   }
 }
 

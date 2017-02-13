@@ -41,7 +41,7 @@ function loggerPrint (str, model, msg) {
     global._perf = []
   }
 
-  global._perf.push([currentDate(), str, msg._name, msg, model])
+  // global._perf.push([currentDate(), str, msg._name, msg, model])
 
 
 

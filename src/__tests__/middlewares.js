@@ -12,7 +12,7 @@ let shouldSleep = false
 let shouldLog = false
 let shouldPromise = false
 let shouldThunk = true
-let shouldGen = false
+let shouldGen = false // something really weird with this
 
 
 let preThunk =
@@ -60,7 +60,7 @@ while (i--) {
 
   if (shouldGen) {
     dispatcher$.middleware(function * thunkStyle (iterRetVal) {
-      console.log('^^^^^^^')
+      // console.log('^^^^^^^')
 
       while (true) {
         if (shouldLog) {

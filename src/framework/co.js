@@ -51,28 +51,31 @@ export default function co(fn) {
     }
 
     function next(err, res) {
-      var ret;
+      // var ret;
 
       // multiple args
       if (arguments.length > 2) res = slice.call(arguments, 1);
 
-      // error
-      if (err) {
-        try {
-          ret = gen.throw(err);
-        } catch (e) {
-          return exit(e);
-        }
-      }
+      let ret = tryCatchGen(err, res, gen, exit)
 
-      // ok
-      if (!err) {
-        try {
-          ret = gen.next(res);
-        } catch (e) {
-          return exit(e);
-        }
-      }
+      if (!ret) { return }
+      // error
+      // if (err) {
+      //   try {
+      //     ret = gen.throw(err);
+      //   } catch (e) {
+      //     return exit(e);
+      //   }
+      // }
+      //
+      // // ok
+      // if (!err) {
+      //   try {
+      //     ret = gen.next(res);
+      //   } catch (e) {
+      //     return exit(e);
+      //   }
+      // }
 
       // done
       if (ret.done) return exit(null, ret.value);
@@ -83,8 +86,10 @@ export default function co(fn) {
       // run
       if ('function' === typeof ret.value) {
         var called = false;
+        //  tryCatchThunk(ctx, ret, called, next)
         try {
           ret.value.call(ctx, function(){
+            // console.log(called)
             if (called) return;
             called = true;
             next.apply(ctx, arguments);
@@ -106,16 +111,60 @@ export default function co(fn) {
   }
 }
 
+
+function tryCatchGen (err, res, gen, exit) {
+  // error
+  if (err) {
+    try {
+      return gen.throw(err);
+    } catch (e) {
+      return exit(e);
+    }
+  }
+
+  // ok
+  if (!err) {
+    try {
+      return gen.next(res);
+    } catch (e) {
+      return exit(e);
+    }
+  }
+}
+
+
+// TODO: source of bug !!!
+function tryCatchThunk (_ctx, _ret, _called,  _next) {
+  let called = _called;
+  let ctx = _ctx
+  let ret = _ret
+  let next = _next
+
+  try {
+    ret.value.call(ctx, function(){
+      if (called) return;
+      called = true;
+      next.apply(ctx, arguments);
+    });
+  } catch (e) {
+    requestAnimationFrame(function(){
+      if (called) return;
+      called = true;
+      next(e);
+    });
+  }
+}
+
 /**
  * Convert `obj` into a normalized thunk.
  *
  * @param {Mixed} obj
  * @param {Mixed} ctx
  * @return {Function}
- * @api private
+ * @api public
  */
 
-function toThunk(obj, ctx) {
+export function toThunk(obj, ctx) {
 
   if (isGeneratorFunction(obj)) {
     return co(obj.call(ctx));

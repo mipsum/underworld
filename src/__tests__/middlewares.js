@@ -3,16 +3,17 @@
 import dispatcher$ from 'fw/dispatcher'
 
 
-it('', () => {})
+// it('', () => {})
 
 
 // lame async test
-let i = 1
-let shouldSleep = true
+let i = 1000
+let shouldSleep = false
 let shouldLog = true
-let shouldPromise = true
+let shouldPromise = false
 let shouldThunk = true
-let shouldGen = true
+let shouldGen = false
+
 
 while (i--) {
 
@@ -142,8 +143,8 @@ while (i--) {
 
 
   if (shouldPromise) {
-    dispatcher$.middleware(function * promiseStyle (iterRetVal) {
 
+    dispatcher$.middleware(function * promiseStyle (iterRetVal) {
       while (true) {
 
         if (shouldLog) {

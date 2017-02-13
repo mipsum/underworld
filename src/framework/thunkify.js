@@ -4,7 +4,7 @@
 // changes:
 // move try catch out from next function into its own function.
 import {
-  isPromise, isGenerator, isGeneratorFunction, isObject
+  isPromise, isGenerator, isGeneratorFunction, isObject, isFunction,
 } from './type-check'
 
 
@@ -31,7 +31,7 @@ export default function toThunk(obj, ctx, co) {
     return promiseToThunk(obj);
   }
 
-  if ('function' === typeof obj) {
+  if (isFunction(obj)) {
     return obj;
   }
 
@@ -88,7 +88,7 @@ export function objectToThunk(obj){
       try {
         fn = toThunk(fn, ctx);
 
-        if ('function' !== typeof fn) {
+        if (!isFunction(fn)) {
           results[key] = fn;
           return --pending || done(null, results);
         }

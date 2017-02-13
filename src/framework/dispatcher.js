@@ -1,9 +1,10 @@
 import deepFreeze from './deep-freeze'
 
-import stream from './stream'
 import curryN from 'ramda/src/curryN'
+import stream from './stream'
 
-import './stream2'
+import { isFunction } from './type-check'
+
 
 import co from './co'
 
@@ -36,7 +37,7 @@ let reducerWrap =
     let f = fn(model)
 
     if (!f._ctx) {
-      return 'function' === typeof f
+      return isFunction(f)
         ? f(msg)
         : f
     }
@@ -124,12 +125,12 @@ function * _applyMiddleware (model, msg) {
     iterRetVal = list[i].next().value
 
     // thunk
-    if ('function' === typeof iterRetVal) {
+    if (isFunction(iterRetVal)) {
       iterRetVal = yield iterRetVal
     }
 
     // promise
-    if (iterRetVal && 'function' === typeof iterRetVal.then) {
+    if (iterRetVal && isFunction(iterRetVal.then)) {
       iterRetVal = yield iterRetVal
     }
   }
@@ -146,11 +147,11 @@ function * _applyMiddleware (model, msg) {
       // looping foward
       iterRetVal = list[len - (i + 1)].next(iterRetVal).value
 
-      if ('function' === typeof iterRetVal) {
+      if (isFunction(iterRetVal)) {
         iterRetVal = yield iterRetVal
       }
 
-      if (iterRetVal && 'function' === typeof iterRetVal.then) {
+      if (iterRetVal && isFunction(iterRetVal.then)) {
         iterRetVal = yield iterRetVal
       }
 
@@ -167,11 +168,11 @@ function * _applyMiddleware (model, msg) {
     while (i--) {
       iterRetVal = list[i].next(iterRetVal).value
 
-      if ('function' === typeof iterRetVal) {
+      if (isFunction(iterRetVal)) {
         iterRetVal = yield iterRetVal
       }
 
-      if (iterRetVal && 'function' === typeof iterRetVal.then) {
+      if (iterRetVal && isFunction(iterRetVal.then)) {
         iterRetVal = yield iterRetVal
       }
     }

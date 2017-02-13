@@ -1,6 +1,8 @@
 import flyd from 'flyd'
 import curryN from 'ramda/src/curryN'
 
+import { isFunction } from './type-check'
+
 
 export let stream =
   (...a) => wrapStream(flyd.stream(...a))
@@ -139,7 +141,7 @@ function wrapMapFn (f, s) {
       return n
     }
 
-    if ('function' !== typeof n) {
+    if (!isFunction(n)) {
       return n
     }
 

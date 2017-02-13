@@ -229,6 +229,10 @@ module.exports = {
     fs: 'empty',
     net: 'empty',
     tls: 'empty',
-    process: 'empty',
+    // process: 'empty',
+    buffer: 'empty',
+    // Buffer: 'empty',
+    // 'buffer-shims': 'empty'
+
   }
 };

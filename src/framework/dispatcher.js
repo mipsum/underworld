@@ -6,6 +6,53 @@ import curryN from 'ramda/src/curryN'
 import co from './co'
 
 
+
+// Symbol.hasInstance = null
+  //
+  // var realHasInstance;
+  // if (typeof Symbol === 'function' && Symbol.hasInstance) {
+  //   realHasInstance = Function.prototype[Symbol.hasInstance];
+  //   Object.defineProperty(Writable, Symbol.hasInstance, {
+  //     value: function(object) {
+  //       if (realHasInstance.call(this, object))
+  //         return true;
+  //
+  //       return object && object._writableState instanceof WritableState;
+  //     }
+  //   });
+  // } else {
+  //   realHasInstance = function(object) {
+  //     return object instanceof this;
+  //   };
+  // }
+
+
+// import 'readable-stream'
+import { obj as thr } from 'through2'
+
+
+let stt = thr(function (vfs, enc, next) {
+  console.log('----', vfs, enc, next)
+
+  this.push('AAAAA')
+
+  next(null, 'BBBBBB')
+})
+
+stt.pipe(thr((vfs, enc, next) => {
+  console.log('@@@@@@', vfs, enc, next)
+  next()
+}))
+
+
+// console.log('========>', stt)
+
+
+setTimeout(() => {
+  stt.write('RRRRR')
+}, 2000)
+
+
 let dispatcher$ =
   stream()
 

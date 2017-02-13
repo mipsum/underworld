@@ -63,8 +63,19 @@ flyd.stream = function(initialValue) {
  *   return n1() > n2() ? n1() : n2();
  * }, [n1, n2]);
  */
+
+// let can = false
+// setTimeout(() => {
+//   can = true
+//   console.log('ready')
+// }, 1000)
+
 flyd.combine = curryN(2, combine);
 function combine(fn, streams) {
+  // console.log('*****--->>>>', fn, streams)
+  // if (can) {
+  //   // throw new Error('test')
+  // }
   var i, s, deps, depEndStreams;
   var endStream = createDependentStream([], trueFn);
   deps = []; depEndStreams = [];
@@ -470,6 +481,7 @@ function isUndefDepsChanged (ar) {
  * Update a dependent stream using its dependencies in an atomic way
  * @param {stream} stream - the stream to update
  */
+var _returnVal
 function updateStream(s) {
   if ((s.depsMet !== true && initialDepsNotMet(s)) ||
       (s.end !== undefined && s.end.val === true)) return;
@@ -479,9 +491,9 @@ function updateStream(s) {
   }
   inStream = s;
   if (!isUndefDepsChanged(s.depsChanged)) s.fnArgs[s.fnArgs.length - 1] = s.depsChanged;
-  var returnVal = s.fn.apply(s.fn, s.fnArgs);
-  if (returnVal !== undefined) {
-    s(returnVal);
+  _returnVal = s.fn.apply(s.fn, s.fnArgs);
+  if (_returnVal !== undefined) {
+    s(_returnVal);
   }
   inStream = undefined;
   if (!isUndefDepsChanged(s.depsChanged)) cleanArray(s.depsChanged);

@@ -96,6 +96,8 @@ module.exports = {
 
     alias: {
       fw: path.resolve(BASE_PATH, './src/framework'),
+      // buffer:  path.resolve(BASE_PATH, './src/framework/buffer'),
+      // 'buffer-shims':  path.resolve(BASE_PATH, './src/framework/buffer-shims'),
     },
   },
 
@@ -270,12 +272,12 @@ module.exports = {
         collapse_vars: true,
         reduce_vars: true,
       },
-      mangle: false,
-      // mangle: {
-      //   screw_ie8: true,
-      //   // except: ['GeneratorFunction'] // bug on minifying
-      //
-      // },
+      // mangle: false,
+      mangle: {
+        screw_ie8: true,
+        // except: ['GeneratorFunction'] // bug on minifying
+
+      },
       output: {
         comments: false,
         screw_ie8: true
@@ -318,6 +320,9 @@ module.exports = {
     fs: 'empty',
     net: 'empty',
     tls: 'empty',
-    process: 'empty',
+    // process: 'empty',
+    // buffer: 'empty',
+    // Buffer: 'empty',
+    // 'buffer-shims': 'empty'
   }
 };

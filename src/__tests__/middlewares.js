@@ -10,10 +10,51 @@ import dispatcher$ from 'fw/dispatcher'
 let i = 1000
 let shouldSleep = false
 let shouldLog = false
-let shouldPromise = false
-let shouldThunk = true
+let shouldPromise = true
+let shouldThunk = false
 let shouldGen = false
 
+
+let preThunk =
+  iterRetVal => next => {
+    // throw new Error('test thunk')
+    if (shouldSleep) {
+      setTimeout(() => {
+        if (shouldLog) {
+          console.log('00')
+        }
+        next(null, iterRetVal)
+      }, 200)
+    }
+    else {
+      if (shouldLog) {
+        console.log('00')
+      }
+      // setImmediate(() => {
+        next(null, iterRetVal)
+      // })
+    }
+
+  }
+
+
+let postThunk =
+  iterRetVal => next => {
+    if (shouldSleep) {
+      setTimeout(() => {
+        if (shouldLog) {
+          console.log('01')
+        }
+        next(null, iterRetVal)
+      }, 200)
+    }
+    else {
+      if (shouldLog) {
+        console.log('01')
+      }
+      next(null, iterRetVal)
+    }
+  }
 
 while (i--) {
 
@@ -94,48 +135,14 @@ while (i--) {
           console.log('pre thunk')
         }
 
-        iterRetVal = yield next => {
-          // throw new Error('test thunk')
-          if (shouldSleep) {
-            setTimeout(() => {
-              if (shouldLog) {
-                console.log('00')
-              }
-              next(null, iterRetVal)
-            }, 200)
-          }
-          else {
-            if (shouldLog) {
-              console.log('00')
-            }
-            // setImmediate(() => {
-              next(null, iterRetVal)
-            // })
-          }
-
-        }
+        iterRetVal = yield preThunk(iterRetVal)
 
         if (shouldLog) {
           console.log('pos thunk')
         }
 
 
-        ;iterRetVal = yield next => {
-          if (shouldSleep) {
-            setTimeout(() => {
-              if (shouldLog) {
-                console.log('01')
-              }
-              next(null, iterRetVal)
-            }, 200)
-          }
-          else {
-            if (shouldLog) {
-              console.log('01')
-            }
-            next(null, iterRetVal)
-          }
-        }
+        ;iterRetVal = yield postThunk(iterRetVal)
 
       }
     })

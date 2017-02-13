@@ -3,6 +3,8 @@ import deepFreeze from './deep-freeze'
 import stream from './stream'
 import curryN from 'ramda/src/curryN'
 
+import './stream2'
+
 import co from './co'
 
 
@@ -87,7 +89,7 @@ dispatcher$.middleware =
   genFn => {
     if (__DEV__) {
       if (!isFirstRun) {
-        throw new Error('can\'t add midleware at run time')
+        throw new Error('can\'t add middleware at run time')
       }
     }
 

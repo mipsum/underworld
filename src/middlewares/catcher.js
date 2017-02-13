@@ -3,6 +3,8 @@ import { dispatcher$ } from 'fw'
 
 
 // TODO: test this middleware
+// appears not working
+
 let catcher =
   cfg =>
     function * _catcher (iterRetVal) {

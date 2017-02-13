@@ -65,9 +65,11 @@ export default Object.assign(stream, {
   // map, filter, batch, scan
 })
 
-
+// TODO: if the function returns `f` returns another function
+// assumes it is a thunk. attach a .then method into it to make it async
 let boundMap = curryN(1, function _boundMap (f) {
-  return wrapStream(flyd.map(f, this))
+  // return wrapStream(flyd.map(f, this))
+  return wrapStream(flyd.map(wrapMapFn(f, this), this))
 })
 
 
@@ -127,6 +129,23 @@ function wrapStream (s) {
   s.filter = boundFilter
 
   return s
+}
+
+
+function wrapMapFn (f, s) {
+  return v => {
+    let n = f(v)
+    if (flyd.isStream(n)) {
+      return n
+    }
+
+    if ('function' !== typeof n) {
+      return n
+    }
+
+    n(s)
+    return
+  }
 }
 
 

@@ -56,8 +56,10 @@ export function objectToThunk(obj){
   var i;
 
   return function(done){
-    var keys = Object.keys(obj);
+    var keys = Object.keys(obj); // TODO: replace this array
     var pending = keys.length;
+
+    // TODO: replace this array
     var results = isArray
       ? new Array(pending) // predefine the array length
       : new obj.constructor();

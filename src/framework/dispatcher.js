@@ -29,7 +29,6 @@ let reducer$ =
   reducerSink$.scan(reducerCreator, noopReducer)(noopReducer) // initializing
 
 
-
 let reducerWrap =
   fn => curryN(2, (model, msg) => {
     let f = fn(model)
@@ -88,7 +87,7 @@ dispatcher$.middleware =
   genFn => {
     if (__DEV__) {
       if (!isFirstRun) {
-        throw new Error('can\'t added midleware at run time')
+        throw new Error('can\'t add midleware at run time')
       }
     }
 
@@ -131,11 +130,6 @@ function * _applyMiddleware (model, msg) {
     if (iterRetVal && 'function' === typeof iterRetVal.then) {
       iterRetVal = yield iterRetVal
     }
-
-    // justa data
-    // else {
-    //   [model, msg] = ret
-    // }
   }
 
   // calling update reducers here
@@ -164,11 +158,9 @@ function * _applyMiddleware (model, msg) {
     // send model outbound to the view here
     outbound$(iterRetVal[0])
 
-    iterRetVal = yield inboundYielder
-
+    iterRetVal = yield inboundThunk
     i = len
 
-    //
     // pre update loop
     while (i--) {
       iterRetVal = list[i].next(iterRetVal).value
@@ -180,24 +172,17 @@ function * _applyMiddleware (model, msg) {
       if (iterRetVal && 'function' === typeof iterRetVal.then) {
         iterRetVal = yield iterRetVal
       }
-      // else {
-      //   [model, msg] = iterRetVal
-      // }
-
     }
-
 
     // call update reducing fn here
     iterRetVal[0] = reducer$()(iterRetVal[0], iterRetVal[1])
-
   }
-
 }
 
 
-function inboundYielder (next) {
+function inboundThunk (next) {
   inbound$.map(v => {
-    inbound$ = stream()
+    stream.reset(inbound$)
     return next(null, v)
   })
 }

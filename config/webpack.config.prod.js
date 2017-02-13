@@ -270,12 +270,12 @@ module.exports = {
         collapse_vars: true,
         reduce_vars: true,
       },
-      mangle: false,
-      // mangle: {
-      //   screw_ie8: true,
-      //   // except: ['GeneratorFunction'] // bug on minifying
-      //
-      // },
+      // mangle: false,
+      mangle: {
+        screw_ie8: true,
+        // except: ['GeneratorFunction'] // bug on minifying
+
+      },
       output: {
         comments: false,
         screw_ie8: true

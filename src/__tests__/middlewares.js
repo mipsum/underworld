@@ -10,8 +10,8 @@ import dispatcher$ from 'fw/dispatcher'
 let i = 1000
 let shouldSleep = false
 let shouldLog = false
-let shouldPromise = true
-let shouldThunk = false
+let shouldPromise = false
+let shouldThunk = true
 let shouldGen = false
 
 
@@ -19,6 +19,7 @@ while (i--) {
 
   if (shouldGen) {
     dispatcher$.middleware(function * thunkStyle (iterRetVal) {
+      console.log('^^^^^^^')
 
       while (true) {
         if (shouldLog) {

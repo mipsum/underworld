@@ -45,10 +45,10 @@ function co(fn) {
     next();
 
     // #92
-    // wrap the callback in a setImmediate
+    // wrap the callback in a requestAnimationFrame
     // so that any of its errors aren't caught by `co`
     function exit(err, res) {
-      setImmediate(function(){
+      requestAnimationFrame(function(){
         done.call(ctx, err, res);
       });
     }
@@ -93,7 +93,7 @@ function co(fn) {
             next.apply(ctx, arguments);
           });
         } catch (e) {
-          setImmediate(function(){
+          requestAnimationFrame(function(){
             if (called) return;
             called = true;
             next(e);
@@ -165,7 +165,7 @@ function objectToThunk(obj){
     var finished;
 
     if (!pending) {
-      setImmediate(function(){
+      requestAnimationFrame(function(){
         done(null, results)
       });
       return;
@@ -259,9 +259,10 @@ function isGenerator(obj) {
  * @api private
  */
 
-function isGeneratorFunction(obj) {
-  return obj && obj.constructor && 'GeneratorFunction' === obj.constructor.name;
-}
+ let GeneratorFunction = (function*(){}).constructor
+ export function isGeneratorFunction(obj) {
+   return obj && obj.constructor && obj instanceof GeneratorFunction
+ }
 
 /**
  * Check for plain object.
@@ -289,7 +290,7 @@ function isObject(val) {
 
 function error(err) {
   if (!err) return;
-  setImmediate(function(){
+  requestAnimationFrame(function(){
     throw err;
   });
 }

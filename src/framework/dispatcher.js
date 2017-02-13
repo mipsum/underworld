@@ -1,10 +1,7 @@
 import deepFreeze from './deep-freeze'
 
-import curryN from 'ramda/src/curryN'
 import stream from './stream'
-
-import { isFunction } from './type-check'
-
+import curryN from 'ramda/src/curryN'
 
 import co from './co'
 
@@ -32,12 +29,13 @@ let reducer$ =
   reducerSink$.scan(reducerCreator, noopReducer)(noopReducer) // initializing
 
 
+
 let reducerWrap =
   fn => curryN(2, (model, msg) => {
     let f = fn(model)
 
     if (!f._ctx) {
-      return isFunction(f)
+      return 'function' === typeof f
         ? f(msg)
         : f
     }
@@ -90,7 +88,7 @@ dispatcher$.middleware =
   genFn => {
     if (__DEV__) {
       if (!isFirstRun) {
-        throw new Error('can\'t add middleware at run time')
+        throw new Error('can\'t added midleware at run time')
       }
     }
 
@@ -125,14 +123,19 @@ function * _applyMiddleware (model, msg) {
     iterRetVal = list[i].next().value
 
     // thunk
-    if (isFunction(iterRetVal)) {
+    if ('function' === typeof iterRetVal) {
       iterRetVal = yield iterRetVal
     }
 
     // promise
-    if (iterRetVal && isFunction(iterRetVal.then)) {
+    if (iterRetVal && 'function' === typeof iterRetVal.then) {
       iterRetVal = yield iterRetVal
     }
+
+    // justa data
+    // else {
+    //   [model, msg] = ret
+    // }
   }
 
   // calling update reducers here
@@ -147,11 +150,11 @@ function * _applyMiddleware (model, msg) {
       // looping foward
       iterRetVal = list[len - (i + 1)].next(iterRetVal).value
 
-      if (isFunction(iterRetVal)) {
+      if ('function' === typeof iterRetVal) {
         iterRetVal = yield iterRetVal
       }
 
-      if (iterRetVal && isFunction(iterRetVal.then)) {
+      if (iterRetVal && 'function' === typeof iterRetVal.then) {
         iterRetVal = yield iterRetVal
       }
 
@@ -161,31 +164,40 @@ function * _applyMiddleware (model, msg) {
     // send model outbound to the view here
     outbound$(iterRetVal[0])
 
-    iterRetVal = yield inboundThunk
+    iterRetVal = yield inboundYielder
+
     i = len
 
+    //
     // pre update loop
     while (i--) {
       iterRetVal = list[i].next(iterRetVal).value
 
-      if (isFunction(iterRetVal)) {
+      if ('function' === typeof iterRetVal) {
         iterRetVal = yield iterRetVal
       }
 
-      if (iterRetVal && isFunction(iterRetVal.then)) {
+      if (iterRetVal && 'function' === typeof iterRetVal.then) {
         iterRetVal = yield iterRetVal
       }
+      // else {
+      //   [model, msg] = iterRetVal
+      // }
+
     }
+
 
     // call update reducing fn here
     iterRetVal[0] = reducer$()(iterRetVal[0], iterRetVal[1])
+
   }
+
 }
 
 
-function inboundThunk (next) {
+function inboundYielder (next) {
   inbound$.map(v => {
-    stream.reset(inbound$)
+    inbound$ = stream()
     return next(null, v)
   })
 }

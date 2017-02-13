@@ -9,9 +9,9 @@ import dispatcher$ from 'fw/dispatcher'
 // lame async test
 let i = 1000
 let shouldSleep = false
-let shouldLog = true
-let shouldPromise = false
-let shouldThunk = true
+let shouldLog = false
+let shouldPromise = true
+let shouldThunk = false
 let shouldGen = false
 
 

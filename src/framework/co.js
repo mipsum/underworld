@@ -85,20 +85,15 @@ export default function co(fn) {
         var called = false;
         try {
           ret.value.call(ctx, function(){
-            let _ctx = ctx
-            let _next = next
-
             if (called) return;
             called = true;
-            _next.apply(_ctx, arguments);
+            next.apply(ctx, arguments);
           });
         } catch (e) {
           requestAnimationFrame(function(){
-            let _next = next
-
             if (called) return;
             called = true;
-            _next(e);
+            next(e);
           });
         }
         return;

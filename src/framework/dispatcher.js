@@ -110,14 +110,14 @@ let applyMiddleware =
 
 
 let isFirstRun = true
-let payload = []
+let inboundPayload = []
 export let update =
   curryN(2, (model, msg) => {
 
     if (!isFirstRun) {
-      payload[0] = model
-      payload[1] = msg
-      inbound$(payload)
+      inboundPayload[0] = model
+      inboundPayload[1] = msg
+      inbound$(inboundPayload)
       return
 
     }
@@ -155,6 +155,8 @@ dispatcher$.middleware =
 
 // TODO: too many arrays created.
 // needs to be smart about overusing them
+
+let _cleanIterRetVal = []
 
 function * _applyMiddleware (model, msg) {
   let len = genList.length
@@ -207,6 +209,8 @@ function * _applyMiddleware (model, msg) {
 
     // send model outbound to the view here
     outbound$(iterRetVal[0])
+    // iterRetVal[0] = _cleanIterRetVal
+    // iterRetVal[1] = _cleanIterRetVal
 
     iterRetVal = yield inboundThunk
     i = len
@@ -231,10 +235,11 @@ function * _applyMiddleware (model, msg) {
 
 
 function inboundThunk (next) {
-  inbound$.map(v => {
+  inbound$.map(vv => {
     inbound$ = stream()
+    // inbound$.hasVal = false
     // stream.reset(inbound$)
-    return next(null, v)
+    return next(null, vv)
   })
 }
 

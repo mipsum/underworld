@@ -10,8 +10,8 @@ import dispatcher$ from 'fw/dispatcher'
 let i = 1000
 let shouldSleep = false
 let shouldLog = false
-let shouldPromise = false
-let shouldThunk = true
+let shouldPromise = true
+let shouldThunk = false
 let shouldGen = false // something really weird with this
 
 
@@ -175,7 +175,10 @@ while (i--) {
             console.log('00')
           }
 
-          iterRetVal = yield Promise.resolve(iterRetVal)
+          // iterRetVal = yield Promise.resolve(iterRetVal)
+          iterRetVal = yield new Promise((resolve, reject) => {
+            resolve(iterRetVal)
+          })
         }
 
 
@@ -202,7 +205,10 @@ while (i--) {
             console.log('01')
           }
 
-          iterRetVal = yield Promise.resolve(iterRetVal)
+          iterRetVal = yield new Promise((resolve, reject) => {
+            resolve(iterRetVal)
+          })
+          // iterRetVal = yield Promise.resolve(iterRetVal)
         }
 
       }

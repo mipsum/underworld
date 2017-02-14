@@ -10,10 +10,18 @@ import dispatcher$ from 'fw/dispatcher'
 let i = 1000
 let shouldSleep = false
 let shouldLog = false
-let shouldPromise = true
-let shouldThunk = false
-let shouldGen = false // something really weird with this
+let shouldPromise = false
+let shouldThunk = true
+let shouldGenFun = false // something really weird with this
 
+
+if (shouldPromise) {
+  console.log('Promise')
+}
+
+if (shouldThunk) {
+  console.log('Thunk')
+}
 
 let preThunk =
   iterRetVal => next => {
@@ -58,8 +66,8 @@ let postThunk =
 
 while (i--) {
 
-  if (shouldGen) {
-    dispatcher$.middleware(function * thunkStyle (iterRetVal) {
+  if (shouldGenFun) {
+    dispatcher$.middleware(function * genFunStyle (iterRetVal) {
       // console.log('^^^^^^^')
 
       while (true) {
@@ -68,14 +76,15 @@ while (i--) {
         }
 
         iterRetVal = yield function * preGet () {
-          return yield next => {
-            // throw new Error('test gen')
+          // with a thunk, it blows up the stack
+
+          return new Promise((resolve, reject) => {
             if (shouldSleep) {
               setTimeout(() => {
                 if (shouldLog) {
                   console.log('00')
                 }
-                next(null, iterRetVal)
+                resolve(iterRetVal)
               }, 200)
 
 
@@ -84,12 +93,14 @@ while (i--) {
               if (shouldLog) {
                 console.log('00')
               }
+
+              // console.log('IIIIIIII', iterRetVal)
               // setImmediate(() => {
-                next(null, iterRetVal)
+                resolve(iterRetVal)
               // })
             }
+          })
 
-          }
         }
 
 
@@ -99,26 +110,28 @@ while (i--) {
 
 
         iterRetVal = yield function * postGen () {
-          return yield next => {
-            // throw new Error('test gen')
+          return new Promise((resolve, reject) => {
             if (shouldSleep) {
               setTimeout(() => {
                 if (shouldLog) {
-                  console.log('01')
+                  console.log('00')
                 }
-                next(null, iterRetVal)
+                resolve(iterRetVal)
               }, 200)
+
+
             }
             else {
               if (shouldLog) {
-                console.log('01')
+                console.log('00')
               }
+
+              // console.log('IIIIIIII', iterRetVal)
               // setImmediate(() => {
-                next(null, iterRetVal)
+                resolve(iterRetVal)
               // })
             }
-
-          }
+          })
         }
 
       }

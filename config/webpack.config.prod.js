@@ -272,10 +272,10 @@ module.exports = {
         collapse_vars: true,
         reduce_vars: true,
       },
-      mangle: false,
-      // mangle: {
-      //   screw_ie8: true,
-      // },
+      // mangle: false,
+      mangle: {
+        screw_ie8: true,
+      },
       output: {
         comments: false,
         screw_ie8: true

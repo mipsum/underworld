@@ -45,9 +45,13 @@ export default function co(fn) {
     // wrap the callback in a requestAnimationFrame
     // so that any of its errors aren't caught by `co`
     function exit(err, res) {
-      requestAnimationFrame(function(){
-        done.call(ctx, err, res);
-      });
+      if (err) {
+        requestAnimationFrame(function(){
+          done.call(ctx, err);
+        });
+      }
+
+      done.call(ctx, null, res);
     }
 
     function next(err, res) {

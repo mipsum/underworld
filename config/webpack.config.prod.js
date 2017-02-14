@@ -272,12 +272,10 @@ module.exports = {
         collapse_vars: true,
         reduce_vars: true,
       },
-      // mangle: false,
-      mangle: {
-        screw_ie8: true,
-        // except: ['GeneratorFunction'] // bug on minifying
-
-      },
+      mangle: false,
+      // mangle: {
+      //   screw_ie8: true,
+      // },
       output: {
         comments: false,
         screw_ie8: true
@@ -320,7 +318,7 @@ module.exports = {
     fs: 'empty',
     net: 'empty',
     tls: 'empty',
-    // process: 'empty',
+    process: 'empty',
     // buffer: 'empty',
     // Buffer: 'empty',
     // 'buffer-shims': 'empty'

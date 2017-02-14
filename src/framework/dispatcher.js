@@ -28,29 +28,29 @@ import co from './co'
 
 
 // import 'readable-stream'
-import { obj as thr } from 'through2'
-
-
-let stt = thr(function (vfs, enc, next) {
-  console.log('----', vfs, enc, next)
-
-  this.push('AAAAA')
-
-  next(null, 'BBBBBB')
-})
-
-stt.pipe(thr((vfs, enc, next) => {
-  console.log('@@@@@@', vfs, enc, next)
-  next()
-}))
+// import { obj as thr } from 'through2'
+//
+//
+// let stt = thr(function (vfs, enc, next) {
+//   console.log('----', vfs, enc, next)
+//
+//   this.push('AAAAA')
+//
+//   next(null, 'BBBBBB')
+// })
+//
+// stt.pipe(thr((vfs, enc, next) => {
+//   console.log('@@@@@@', vfs, enc, next)
+//   next()
+// }))
 
 
 // console.log('========>', stt)
 
 
-setTimeout(() => {
-  stt.write('RRRRR')
-}, 2000)
+// setTimeout(() => {
+//   stt.write('RRRRR')
+// }, 2000)
 
 
 let dispatcher$ =
@@ -110,11 +110,14 @@ let applyMiddleware =
 
 
 let isFirstRun = true
+let payload = []
 export let update =
   curryN(2, (model, msg) => {
 
     if (!isFirstRun) {
-      inbound$([model, msg])
+      payload[0] = model
+      payload[1] = msg
+      inbound$(payload)
       return
 
     }
@@ -229,10 +232,12 @@ function * _applyMiddleware (model, msg) {
 
 function inboundThunk (next) {
   inbound$.map(v => {
-    stream.reset(inbound$)
+    inbound$ = stream()
+    // stream.reset(inbound$)
     return next(null, v)
   })
 }
+
 
 
 

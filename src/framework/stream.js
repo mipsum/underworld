@@ -1,4 +1,4 @@
-import flyd from './flyd'
+import flyd from 'flyd'
 import curryN from 'ramda/src/curryN'
 
 import { isFunction } from './type-check'
@@ -36,34 +36,69 @@ export let transduce =
   curryN(2, (a, b) => wrapStream(flyd.transduce(a, b)))
 
 
-export let reset =
-  st => {
-    st.hasVal = false
-  }
+// export let reset =
+//   st => {
+//     st.hasVal = false
+//     st.val = undefined
+//     st.queued = false
+//
+//     cleanArray(st.vals)
+//     cleanArray(st.listeners)
+//
+//     if (st.fnArgs){
+//       cleanArray(st.fnArgs)
+//     }
+//
+//     if (st.depsChanged) {
+//       let lastDep = st.depsChanged.pop()
+//       cleanArray(st.depsChanged)
+//       st.depsChanged.push(lastDep)
+//     }
+//
+//     if (st.depEndStreams) {
+//       cleanArray(st.depEndStreams)
+//     }
+//
+//     if (st.end) {
+//       reset(st.end)
+//     }
+//
+//   }
 
 
-export let thunk =
-  fn => {
-    // console.log('----####')
+//
+// function cleanArray (a) {
+//   let i = a.length
+//   while (i--) {
+//     a.pop()
+//   }
+//
+//   return a
+// }
 
-    // let thunk =
-    //   next => {
-    //
-    //   }
-
-    // thunk.then()
-
-    // let handler =
-      // next => {}
-      //
-      //
-      // return handler
-  }
+// export let thunk =
+//   fn => {
+//     // console.log('----####')
+//
+//     // let thunk =
+//     //   next => {
+//     //
+//     //   }
+//
+//     // thunk.then()
+//
+//     // let handler =
+//       // next => {}
+//       //
+//       //
+//       // return handler
+//   }
 
 
 
 export default Object.assign(stream, {
-  combine, immediate, endsOn, on, merge, transduce, reset, thunk
+  combine, immediate, endsOn, on, merge, transduce,
+  // reset, thunk
   // map, filter, batch, scan
 })
 

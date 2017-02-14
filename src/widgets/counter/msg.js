@@ -8,7 +8,7 @@ let Maybe01 = Maybe.extends({
 })
 
 
-export const Action =
+export const Msg =
   Type({
     Increment: [ Maybe01 ],
     Decrement: [ Maybe01 ],

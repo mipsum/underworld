@@ -4,7 +4,7 @@ import stream from 'fw/stream'
 import curryN from 'ramda/src/curryN'
 
 import { maybeToValue } from 'fw/types'
-import { Action } from './types'
+import { Msg } from './msg'
 
 import dispatcher$ from 'fw/dispatcher'
 
@@ -18,7 +18,7 @@ export let init =
 
 export let update =
   ({ value }) =>
-    Action.case({
+    Msg.case({
       Increment: maybe =>
         // ({ value: value + inc(maybe) }),
         log('inc', ({ value: value + inc(maybe) })),

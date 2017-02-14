@@ -7,7 +7,7 @@ import stream from 'fw/stream'
 import { Maybe } from 'fw/types'
 import { Action } from './types'
 
-import { dispatcher$ } from 'fw'
+import dispatcher$ from 'fw/dispatcher'
 
 
 
@@ -52,9 +52,9 @@ let start = () => {
 
 global.start = start
 
-if (!__DEV__) {
-  start()
-}
+// if (!__DEV__) {
+//   start()
+// }
 
 
 let handleClick =

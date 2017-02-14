@@ -5,52 +5,7 @@ import curryN from 'ramda/src/curryN'
 
 import co from './co'
 
-
-
-// Symbol.hasInstance = null
-  //
-  // var realHasInstance;
-  // if (typeof Symbol === 'function' && Symbol.hasInstance) {
-  //   realHasInstance = Function.prototype[Symbol.hasInstance];
-  //   Object.defineProperty(Writable, Symbol.hasInstance, {
-  //     value: function(object) {
-  //       if (realHasInstance.call(this, object))
-  //         return true;
-  //
-  //       return object && object._writableState instanceof WritableState;
-  //     }
-  //   });
-  // } else {
-  //   realHasInstance = function(object) {
-  //     return object instanceof this;
-  //   };
-  // }
-
-
-// import 'readable-stream'
-// import { obj as thr } from 'through2'
-//
-//
-// let stt = thr(function (vfs, enc, next) {
-//   console.log('----', vfs, enc, next)
-//
-//   this.push('AAAAA')
-//
-//   next(null, 'BBBBBB')
-// })
-//
-// stt.pipe(thr((vfs, enc, next) => {
-//   console.log('@@@@@@', vfs, enc, next)
-//   next()
-// }))
-
-
-// console.log('========>', stt)
-
-
-// setTimeout(() => {
-//   stt.write('RRRRR')
-// }, 2000)
+import { isFunction } from './type-check'
 
 
 let dispatcher$ =
@@ -81,7 +36,7 @@ let reducerWrap =
     let f = fn(model)
 
     if (!f._ctx) {
-      return 'function' === typeof f
+      return isFunction(f)
         ? f(msg)
         : f
     }
@@ -156,8 +111,6 @@ dispatcher$.middleware =
 // TODO: too many arrays created.
 // needs to be smart about overusing them
 
-let _cleanIterRetVal = []
-
 function * _applyMiddleware (model, msg) {
   let len = genList.length
   let i = len
@@ -174,12 +127,12 @@ function * _applyMiddleware (model, msg) {
     iterRetVal = list[i].next().value
 
     // thunk
-    if ('function' === typeof iterRetVal) {
+    if (isFunction(iterRetVal)) {
       iterRetVal = yield iterRetVal
     }
 
     // promise
-    if (iterRetVal && 'function' === typeof iterRetVal.then) {
+    if (iterRetVal && isFunction(iterRetVal.then)) {
       iterRetVal = yield iterRetVal
     }
   }
@@ -196,21 +149,18 @@ function * _applyMiddleware (model, msg) {
       // looping foward
       iterRetVal = list[len - (i + 1)].next(iterRetVal).value
 
-      if ('function' === typeof iterRetVal) {
+      if (isFunction(iterRetVal)) {
         iterRetVal = yield iterRetVal
       }
 
-      if (iterRetVal && 'function' === typeof iterRetVal.then) {
+      if (iterRetVal && isFunction(iterRetVal.then)) {
         iterRetVal = yield iterRetVal
       }
 
     }
 
-
-    // send model outbound to the view here
+    // send model outbound to the render function
     outbound$(iterRetVal[0])
-    // iterRetVal[0] = _cleanIterRetVal
-    // iterRetVal[1] = _cleanIterRetVal
 
     iterRetVal = yield inboundThunk
     i = len
@@ -219,11 +169,11 @@ function * _applyMiddleware (model, msg) {
     while (i--) {
       iterRetVal = list[i].next(iterRetVal).value
 
-      if ('function' === typeof iterRetVal) {
+      if (isFunction(iterRetVal)) {
         iterRetVal = yield iterRetVal
       }
 
-      if (iterRetVal && 'function' === typeof iterRetVal.then) {
+      if (iterRetVal && isFunction(iterRetVal.then)) {
         iterRetVal = yield iterRetVal
       }
     }
@@ -235,16 +185,13 @@ function * _applyMiddleware (model, msg) {
 
 
 function inboundThunk (next) {
-  inbound$.map(vv => {
+  inbound$.map(v => {
+    // NOTE: that calling map on every inbound data
+    // will cause memory leak.
+    // Therefore, reseting the inboud$ stream and let
+    // the GC do its thing
+
     inbound$ = stream()
-    // inbound$.hasVal = false
-    // stream.reset(inbound$)
-    return next(null, vv)
+    return next(null, v)
   })
 }
-
-
-
-
-
-//

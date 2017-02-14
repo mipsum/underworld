@@ -1,5 +1,5 @@
 // test
-import '../__tests__/middlewares'
+// import '../__tests__/middlewares'
 
 export { default as deepFreeze } from './deep-freeze'
 export { default as stream } from './stream'

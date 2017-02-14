@@ -1,5 +1,5 @@
 
-import { dispatcher$ } from 'fw'
+import dispatcher$ from 'fw/dispatcher'
 
 
 // TODO: test this middleware

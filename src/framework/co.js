@@ -32,7 +32,7 @@ export default function co(fn) {
     // if gen is a generator function.
     if (isGenFun) {
       var args = slice.call(arguments), len = args.length;
-      var hasCallback = len && 'function' === typeof args[len - 1];
+      var hasCallback = len && isFunction(args[len - 1]);
       done = hasCallback ? args.pop() : error;
       gen = fn.apply(this, args);
     } else {
@@ -85,7 +85,7 @@ export default function co(fn) {
       ret.value = toThunk(ret.value, ctx);
 
       // run
-      if ('function' === typeof ret.value) {
+      if (isFunction(ret.value)) {
         var called = false;
         try {
           ret.value.call(ctx, function(){
@@ -133,7 +133,7 @@ export function toThunk(obj, ctx) {
     return promiseToThunk(obj);
   }
 
-  if ('function' === typeof obj) {
+  if (isFunction(obj)) {
     return obj;
   }
 
@@ -188,7 +188,7 @@ function objectToThunk(obj){
       try {
         fn = toThunk(fn, ctx);
 
-        if ('function' !== typeof fn) {
+        if (!isFunction(fn)) {
           results[key] = fn;
           return --pending || done(null, results);
         }

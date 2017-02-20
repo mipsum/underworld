@@ -20,13 +20,20 @@ let handleClick =
     click$(msg(Maybe.Just(1)))
   }
 
+console.log('------')
+
+let divProps =
+  { onClick: linkEvent(Msg.Increment, handleClick) }
+
+let _div =
+  <div {...divProps} >
+    { `click here +` }
+  </div>
 
 export default
   ({ model }) =>
     <div>
-      <div onClick={ linkEvent(Msg.Increment, handleClick) } >
-        { `click here +` }
-      </div>
+      {_div}
       <div onClick={ linkEvent(Msg.Decrement, handleClick) } >
         { `click here -` }
       </div>
@@ -38,7 +45,7 @@ export default
 
 // test
 
-if (__DEV__) {
+if (!__DEV__) {
   let counter = 0
   let counter2 = 0
   function loop (ms) {
@@ -75,7 +82,7 @@ if (__DEV__) {
   global.start = start
 
   // if (!__DEV__) {
-  //   start()
+    // start()
   // }
 
 

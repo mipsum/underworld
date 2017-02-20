@@ -1,5 +1,8 @@
 // import './polyfills'
 
+// test
+import './__tests__/middlewares'
+
 import 'normalize.css'
 import 'milligram'
 

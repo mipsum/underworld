@@ -19,6 +19,7 @@ if (shouldPromise) {
   console.log('Promise')
 }
 
+
 if (shouldThunk) {
   console.log('Thunk')
 }

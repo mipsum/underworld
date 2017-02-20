@@ -9,6 +9,7 @@ import { View as ClickView } from './widgets/counter'
 //   'one', 'two', 'three'
 // ]
 
+
 export default ({ model }) =>
 
   <div>

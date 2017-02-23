@@ -2,7 +2,7 @@
 
 ## instalation guide
 #
-# mkfile 5g fbsd.img
+# mkfile 10g fbsd.img
 #
 #  1) choose xterm
 #  2) default keyboard
@@ -19,10 +19,9 @@
 # 14) default
 # 15) don't choose anything on system security hardening (change via sh later)
 # 16) choose
-#     user: mgj or whatever as user
-#     UID 501
-#     group: 501
-#     password is 123.
+#     user: whatever username on the mac
+#     UID 501 <-- SUPER IMPORTANT
+#     password is 123 or whaterver
 #     all default options selected
 # 17) type yes at the end. the type no (to not add another user)
 # 18) exit installer

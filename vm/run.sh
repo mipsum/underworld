@@ -1,3 +1,9 @@
+[ -f "./hdd.img" ] || {
+  echo 'creating vm first'
+  sh ./create.sh
+}
+
+
 D="-U deaddead-dead-dead-dead-deaddeaddead"
 
 USERBOOT="$HOME/Library/Caches/Homebrew/xhyve--git/test/userboot.so"
@@ -13,4 +19,3 @@ LPC_DEV="-l com1,stdio"
 ACPI="-A"
 
 sudo xhyve $ACPI $MEM $SMP $PCI_DEV $LPC_DEV $NET $IMG_HDD $UUID -f fbsd,$USERBOOT,$BOOTVOLUME,"$KERNELENV"
-

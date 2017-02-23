@@ -39,7 +39,9 @@
 # $ mkdir /usr/home/YOU/host-shared
 # $ mount 192.168.64.1:/PATH/TO/EXPORTDIR /usr/home/YOU/host-shared
 # $ mount 192.168.64.1:/Volumes/proton/work/loop /app
-#
+
+# /Volumes/proton/work/loop -network 192.168.64.0 -mask 255.255.255.0 -alldirs -maproot=501 (rw,async,insecure,all_squash,no_subtree_check,anonuid=501,anongid=100)
+
 ##
 
 rm -rf hdd.img

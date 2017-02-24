@@ -19,3 +19,5 @@ LPC_DEV="-l com1,stdio"
 ACPI="-A"
 
 sudo xhyve $ACPI $MEM $SMP $PCI_DEV $LPC_DEV $NET $IMG_HDD $UUID -f fbsd,$USERBOOT,$BOOTVOLUME,"$KERNELENV"
+
+exit 0

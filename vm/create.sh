@@ -45,7 +45,7 @@
 
 rm -rf hdd.img
 echo 'creating hdd.img'
-mkfile 10g hdd.img
+mkfile 5g hdd.img
 
 UUID="-U deaddead-dead-dead-dead-deaddeaddead"
 

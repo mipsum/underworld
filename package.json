@@ -73,6 +73,7 @@
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
     "vm": "cd ./vm; sh run.sh",
+    "nfsd-update": "sudo sh vm/exports.sh",
     "flow": "flow",
     "server": "yarnpkg run build && pushstate-server build",
     "profile": "NODE_ENV=production webpack  --profile --json --config ./config/webpack.config.prod.js > stats.json"

@@ -3,27 +3,31 @@
 ## instalation guide
 #
 # mkfile 10g fbsd.img
-#
-#  1) choose xterm
-#  2) default keyboard
-#  3) hostname fbsd11
-#  4) don't select extra packages
-#  5) choose guided ZFS
-#  6) choose default
-#  8) select vtbd0 virtio block device
-#  9) select Yes
-# 10) create a silly password for root: 123
-# 11) press yes 5 times (for ipv4, ipv6, dhcp, slaac (or whatever else))
-# 12) choose UTC timezone
-# 13) skip choose date and time
-# 14) default
-# 15) don't choose anything on system security hardening (change via sh later)
-# 16) choose
-#     user: whatever username on the mac
-#     UID 501 <-- SUPER IMPORTANT
-#     password is 123 or whaterver
-#     all default options selected
-# 17) type yes at the end. the type no (to not add another user)
+#  0) press enter twice to speed the 9 sec prompt
+#  1) type xterm
+#     choose:
+#  2) install
+#  3) default keymap
+#  4) hostname fbsd11
+#  5) don't select extra packages
+#  6) guided Root-on-ZFS
+#  7) Proceed with Instalation
+#  8) Stripe - No Redundancy
+#  9) MUST select vtbd0 virtio block device
+# 10) press y (to select yes)
+# 11) create a silly password for root: 123 (and confirm it)
+# 12) press yes 5 times (for ipv4, ipv6, dhcp, slaac (or whatever else))
+# 13) press a (to choose UTC timezone) and press y to confirm it
+# 14) skip choose date and time
+# 15) OK System Configuration default selection
+# 16) don't choose anything on system security hardening (change via sh later)
+# 17) press y to add user
+#     - user: dev
+#     - UID 501 <-- SUPER IMPORTANT
+#     - password is 123 or whaterver
+#     - all default options selected
+#     - type yes at the end.
+#     - type no (to not add another user)
 # 18) exit installer
 # 19) select no to last final manual modifications
 # 20) reboot

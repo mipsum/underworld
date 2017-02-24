@@ -25,8 +25,10 @@ cat << EOF
 
   or to enable automount on freebsd boot
   ======================================
-  echo 'autofs_enable=”YES”' >> /etc/rc.conf
-  echo '/mnt /etc/autofs/app' >> /etc/auto_master
-  echo "app -intr,nfsv3 192.168.64.1:$TARGET_DIR" >> /etc/autofs/app
+  echo autofs_enable=\"YES\" >> /etc/rc.conf
+  echo /mnt /etc/autofs/app >> /etc/auto_master
+  echo app -intr,nfsv3 192.168.64.1:$TARGET_DIR >> /etc/autofs/app
+
+  poweroff
 
 EOF

@@ -15,22 +15,23 @@
 #  8) Stripe - No Redundancy
 #  9) MUST select vtbd0 virtio block device
 # 10) press y (to select yes)
-# 11) create a silly password for root: 123 (and confirm it)
+# 11) create a silly password for root: 111 (and confirm it)
 # 12) press yes 5 times (for ipv4, ipv6, dhcp, slaac (or whatever else))
-# 13) press a (to choose UTC timezone) and press y to confirm it
-# 14) skip choose date and time
-# 15) OK System Configuration default selection
-# 16) don't choose anything on system security hardening (change via sh later)
-# 17) press y to add user
+# 13) press ok
+# 14) press a (to choose UTC timezone) and press y to confirm it
+# 15) skip choose date and time
+# 16) OK System Configuration default selection
+# 17) don't choose anything on system security hardening (change via sh later)
+# 18) press y to add user
 #     - user: dev
 #     - UID 501 <-- SUPER IMPORTANT
-#     - password is 123 or whaterver
+#     - password is 111 or whaterver
 #     - all default options selected
 #     - type yes at the end.
 #     - type no (to not add another user)
-# 18) exit installer
-# 19) select no to last final manual modifications
-# 20) reboot
+# 19) exit installer
+# 20) select no to last final manual modifications
+# 21) reboot
 #
 # edit on host (macOS) the file /etc/exports
 # add: /Volume/proton/work/loop  -network 192.168.64.0 -mask 255.255.255.0 -alldirs -maproot=root:wheel

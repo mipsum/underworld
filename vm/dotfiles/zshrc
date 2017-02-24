@@ -66,4 +66,13 @@ alias -g T='|tail'
 # hack for git_status
 cd $PWD; clear
 
+[ "$(whoami)" = "root" ] && {
+  echo
+  echo "CURRENT IP ADDRESS"
+  echo "=================="
+  echo "ssh dev@$(ifconfig vtnet0 | grep 'inet ' | cut -d' ' -f2)"
+  echo
+}
+
+
 source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

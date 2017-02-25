@@ -7,12 +7,12 @@ cat /etc/exports | grep -q "$MAPPING" || {
   echo "$MAPPING" >> /etc/exports
 }
 
-# sudo nfsd update
+sudo nfsd update
 
 cat << EOF
 
   GUEST FREEBSD SETUP
-  ===========
+  ===================
 
   once logged in
   ==============
@@ -20,20 +20,20 @@ cat << EOF
   mount -t nullfs /mnt/app/vm/shared/node_modules /mnt/app/node_modules
 
 
-  or to enable automount on freebsd boot
-  ======================================
+  or mount on boot the app directory from host MACOS into the guest FREEBSD
+  =========================================================================
 
-  mkdir -p /mnt/app/node_modules
-  mkdir -p /mnt/app/vm/shared/node_modules
-
-  echo nullfs_load=\"YES\" >> /boot/loader.conf
-  echo /mnt/app/vm/shared/node_modules    /mnt/app/node_modules   nullfs  rw,late                            0 0 >> /etc/fstab
-  echo 192.168.64.1:$TARGET_DIR           /mnt/app                nfs     rw,tcp,intr,noatime,nfsv3     0 0 >> /etc/fstab
+  echo '192.168.64.1:$TARGET_DIR /mnt/app nfs rw,tcp,intr,noatime,nfsv3 0 0' >> /etc/fstab
 
   poweroff
 
 EOF
 
+# mkdir -p /mnt/app/node_modules
+# mkdir -p /mnt/app/vm/shared/node_modules
+
+# echo nullfs_load=\"YES\" >> /boot/loader.conf
+# echo /mnt/app/vm/shared/node_modules    /mnt/app/node_modules   nullfs  rw,late 0 0 >> /etc/fstab
 
 # echo autofs_enable=\"YES\" >> /etc/rc.conf
 # echo /mnt /etc/autofs/app >> /etc/auto_master

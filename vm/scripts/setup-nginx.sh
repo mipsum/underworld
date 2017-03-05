@@ -11,6 +11,8 @@ ezjail-admin start nginx
 cp /etc/resolv.conf /usr/jails/nginx/etc/
 
 pkg -j nginx install -y nginx
+pkg -j nginx autoremove -y
+pkg -j nginx clean -ya
 
 NGINX_JAIL_ID=$(jls | grep 'nginx' | cut -d' ' -f6)
 echo 'nginx_enable="YES"' > /usr/jails/nginx/etc/rc.conf.d/nginx

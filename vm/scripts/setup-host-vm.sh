@@ -22,6 +22,7 @@ cat /etc/rc.conf 2> /dev/null | grep -q 'ezjail_enable="YES"' || {
 # Setup the interface that all jails will use
 cloned_interfaces="lo1"
 ifconfig_lo1="inet $NGINX_IP netmask 255.255.255.0"
+ifconfig_lo1_alias0="inet $NODEJS_IP netmask 255.255.255.255"
 
 # Future jails can use the following as a template.
 # Be sure to use 255.255.255.255 as the netmask for all interface aliases

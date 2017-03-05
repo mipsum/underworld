@@ -66,6 +66,8 @@ alias -g T='|tail'
 # hack for git_status
 cd $PWD; clear
 
+df -h
+
 [ "$(whoami)" = "root" ] && {
   echo
   echo "CURRENT IP ADDRESS"

@@ -27,6 +27,7 @@ EOF
 
 # after running this command, you gonna be logged out from server
 echo 'locking down system. You will be disconected afterward. just ssh back in'
+sleep 3
 pfctl -nvf /etc/pf.conf && pfctl -F all -f /etc/pf.conf
 
 }

@@ -5,6 +5,9 @@ pkg update
 
 pkg install -y sudo vim-lite zsh zsh-syntax-highlighting
 
+pkg -j nodejs autoremove -y
+pkg -j nodejs clean -ya
+
 chsh -s zsh root
 chsh -s zsh dev
 

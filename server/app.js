@@ -1,3 +1,5 @@
+#! /usr/local/bin/node
+
 var http = require('http');
 var fs = require('fs')
 
@@ -13,4 +15,6 @@ var handleRequest = function(request, response) {
 var www = http.createServer(handleRequest);
 
 console.log('listening 8080')
+
+
 www.listen(8080);

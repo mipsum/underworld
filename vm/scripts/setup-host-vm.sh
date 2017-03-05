@@ -22,7 +22,7 @@ cat /etc/rc.conf 2> /dev/null | grep -q 'ezjail_enable="YES"' || {
 # Setup the interface that all jails will use
 cloned_interfaces="lo1"
 ifconfig_lo1="inet $NGINX_IP netmask 255.255.255.0"
-ifconfig_lo1_alias0="inet $NODEJS_IP netmask 255.255.255.255"
+# ifconfig_lo1_alias0="inet $NODEJS_IP netmask 255.255.255.255"
 
 # Future jails can use the following as a template.
 # Be sure to use 255.255.255.255 as the netmask for all interface aliases
@@ -82,10 +82,17 @@ nat on $ext_if from $jail_net to any -> $ext_addr port 1024:65535 static-port
 
 EOF
 ) >> /etc/pf.conf
-}
-
-sed -i.bak "s;ext_addr =.*;ext_addr = \"$CURRENT_IP\";"  /etc/pf.conf
 
 service pf start
-pfctl -nvf /etc/pf.conf && pfctl -f /etc/pf.conf &&
-pfctl -nf /etc/pf.conf && pfctl -F all -f /etc/pf.conf
+pfctl -nvf /etc/pf.conf && pfctl -F all -f /etc/pf.conf
+
+}
+
+
+cat /etc/pf.conf | grep -qE "ext_addr = \"$CURRENT_IP\"" || {
+  echo 'locking down system. You may be disconected afterward. just ssh back in'
+  sed -i.bak "s;ext_addr =.*;ext_addr = \"$CURRENT_IP\";"  /etc/pf.conf
+
+  service pf start
+  pfctl -nvf /etc/pf.conf && pfctl -F all -f /etc/pf.conf
+}

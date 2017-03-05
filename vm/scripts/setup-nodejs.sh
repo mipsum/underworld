@@ -6,7 +6,9 @@
 
 . /mnt/app/vm/scripts/env.sh
 
-
+# chflags -R noschg
+echo "ifconfig_lo1_alias0='inet $NODEJS_IP netmask 255.255.255.255'" >> /etc/rc.conf
+service netif restart lo1
 # for port in $NODEJS_PORTS; do
 #   JAIL_NAME="nodejs-$port"
 #
@@ -21,8 +23,10 @@
 
 
 ezjail-admin create nodejs $NODEJS_IP
-ezjail-admin start nodejs
 cp /etc/resolv.conf /usr/jails/nodejs/etc/
+
+ezjail-admin start nodejs
+
 
 pkg -j nodejs install -y node npm
 
@@ -31,19 +35,34 @@ pkg -j nodejs install -y node npm
 NODEJS_JAIL_ID=$(jls | grep 'nodejs' | cut -d' ' -f6)
 
 jexec $NODEJS_JAIL_ID npm i -g yarn
+jexec $NODEJS_JAIL_ID yarn global add pm2
+
 pkg -j nodejs remove -y npm
 pkg -j nodejs autoremove -y
 pkg -j nodejs clean -ya
 
-jexec $NODEJS_JAIL_ID mkdir -p /mnt/app 
+jexec $NODEJS_JAIL_ID mkdir -p /mnt/app
 mount -t nullfs /mnt/app /usr/jails/nodejs/mnt/app
 
-jexec $NODEJS_JAIL_ID node /mnt/app/server/app.js
 
-nodejs_TCP_PORTS='$nodejs_TCP_PORTS'
-nodejs='$nodejs'
-ext_if='$ext_if'
-jail_net='$jail_net'
+cp /mnt/app/vm/scripts/pm2-rc.sh /usr/jails/nodejs/etc/rc.d/pm2-root
+chmod +x /usr/jails/etc/rc.d/pm2-root
+echo 'pm2_enable="YES"' >> /usr/jails/nodejs/etc/rc.conf
+echo '/mnt/app /usr/jails/nodejs/mnt/app nullfs rw,late 0 0' >> /etc/fstab
+
+jexec $NODEJS_JAIL_ID pm2 start /mnt/app/server/app.js --name='nodejs'
+jexec $NODEJS_JAIL_ID pm2 startup freebsd
+
+
+# nodejs_TCP_PORTS='$nodejs_TCP_PORTS'
+# nodejs='$nodejs'
+# ext_if='$ext_if'
+# jail_net='$jail_net'
+
+
+
+
+
 
 # cat << EOF >> /etc/pf.conf
 #

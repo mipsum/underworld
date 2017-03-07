@@ -3,10 +3,10 @@
 pkg -v # to force fbsd to install pkg
 pkg update
 
-pkg install -y sudo vim-lite zsh zsh-syntax-highlighting
+pkg install -y sudo vim-lite zsh zsh-syntax-highlighting curl
 
-pkg -j nodejs autoremove -y
-pkg -j nodejs clean -ya
+pkg autoremove -y
+pkg clean -ya
 
 chsh -s zsh root
 chsh -s zsh dev

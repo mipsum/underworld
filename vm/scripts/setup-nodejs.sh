@@ -44,8 +44,8 @@ create_nodejs_jail () {
 
 . /mnt/app/vm/scripts/env.sh
 
-for base in $NODEJS_IP_RANGE; do
-  create_nodejs_jail $base
+for JAIL_ID in $NODEJS_ID; do
+  create_nodejs_jail $JAIL_ID
 done
 
 # # create nodejs jail

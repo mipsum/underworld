@@ -76,5 +76,22 @@ df -h
   echo
 }
 
+. /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
-source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+. /mnt/app/vm/scripts/env.sh
+
+mount_node_modules () {
+  touch /mnt/app/node_modules 2> /dev/null ||
+    sudo mount -t unionfs -o noatime /home/dev/node_modules /mnt/app/node_modules
+
+  echo -n '.' && sleep 1
+  echo "$NODEJS_ID" | tr ' ' '\n' | while read ID; do
+    touch /usr/jails/nodejs$ID/mnt/app/node_modules 2> /dev/null ||
+      sudo mount -t unionfs -o noatime /home/dev/node_modules /usr/jails/nodejs$ID/mnt/app/node_modules
+
+    echo -n '.' && sleep 1
+  done
+
+  echo
+
+}

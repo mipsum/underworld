@@ -28,15 +28,15 @@ create_nodejs_jail () {
   pkg -j $JAIL_NAME clean -ya
 
   jexec $NODEJS_JAIL_ID mkdir -p /mnt/app
-  mount -t nullfs /mnt/app/node_modules /usr/jails/$JAIL_NAME/mnt/app/vm/shared/node_modules
-  mount -t nullfs /mnt/app /usr/jails/$JAIL_NAME/mnt/app
+  mount -t nullfs -o ro /mnt/app/node_modules /usr/jails/$JAIL_NAME/mnt/app/vm/shared/node_modules
+  mount -t nullfs -o ro /mnt/app /usr/jails/$JAIL_NAME/mnt/app
 
   cp /mnt/app/vm/scripts/pm2-rc.sh /usr/jails/$JAIL_NAME/etc/rc.d/pm2-root
   chmod +x /usr/jails/$JAIL_NAME/etc/rc.d/pm2-root
 
   # echo 'pm2_enable="YES"' >> /usr/jails/$JAIL_NAME/etc/rc.conf
-  echo "/mnt/app /usr/jails/$JAIL_NAME/mnt/app nullfs rw,late 0 0" >> /etc/fstab
-  echo "/mnt/app/node_modules /usr/jails/$JAIL_NAME/mnt/app/vm/shared/node_modules nullfs rw,late 0 0" >> /etc/fstab
+  echo "/mnt/app /usr/jails/$JAIL_NAME/mnt/app nullfs ro,late 0 0" >> /etc/fstab
+  echo "/mnt/app/vm/shared/node_modules /usr/jails/$JAIL_NAME/mnt/app/node_modules nullfs ro,late 0 0" >> /etc/fstab
 
   jexec $NODEJS_JAIL_ID pm2 start /mnt/app/server/app.js --name="$JAIL_NAME"
   jexec $NODEJS_JAIL_ID pm2 startup freebsd

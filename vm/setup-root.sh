@@ -39,9 +39,15 @@ cat /usr/local/etc/sudoers 2> /dev/null | grep -q 'dev ALL=(ALL) NOPASSWD: ALL' 
 
 # setup nullfs
 cat /boot/loader.conf 2> /dev/null | grep -q 'nullfs_load="YES"' || {
+  TARGET_DIR="/Volumes/proton/work/loop"
+
   echo 'nullfs_load="YES"' >> /boot/loader.conf
-  echo '/mnt/app/vm/shared/node_modules /mnt/app/node_modules nullfs rw,late 0 0' >> /etc/fstab
+  echo '/mnt/app/vm/shared/node_modules /mnt/app/node_modules nullfs ro,late 0 0' >> /etc/fstab
+  echo '192.168.64.1:$TARGET_DIR /mnt/app nfs rw,tcp,intr,noatime,nfsv3 0 0' >> /etc/fstab
+
+  # echo '/home/dev/node_modules /mnt/app/node_modules unionfs noatime,late 0 0' >> /etc/fstab
 
   mkdir -p /mnt/app/node_modules
   mkdir -p /mnt/app/vm/shared/node_modules
+  mkdir -p /home/dev/node_modules
 }

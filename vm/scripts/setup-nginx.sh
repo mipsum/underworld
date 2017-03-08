@@ -18,8 +18,8 @@ NGINX_JAIL_ID=$(jls | grep 'nginx' | cut -d' ' -f6)
 echo 'nginx_enable="YES"' > /usr/jails/nginx/etc/rc.conf.d/nginx
 
 mkdir -p /usr/jails/nginx/var/www
-mount -t nullfs /mnt/app/build /usr/jails/nginx/var/www
-echo "/mnt/app/build /usr/jails/nginx/var/www nullfs rw,late 0 0" >> /etc/fstab
+mount -t nullfs -o ro /mnt/app/build /usr/jails/nginx/var/www
+echo "/mnt/app/build /usr/jails/nginx/var/www nullfs ro,late 0 0" >> /etc/fstab
 
 jexec $NGINX_JAIL_ID service nginx start
 
@@ -100,6 +100,9 @@ http {
     # ssl_certificate_key /some/location/sillyfacesociety.com.key;
     # ssl_protocols        SSLv3 TLSv1;
     # ssl_ciphers HIGH:!aNULL:!MD5;
+
+    access_log /var/log/nginx/example.com-access.log;
+    error_log  /var/log/nginx/example.com-error.log error;
 
     server_name localhost;
 

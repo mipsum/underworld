@@ -2,7 +2,7 @@
 
 ## instalation guide
 #
-# mkfile 10g fbsd.img
+# -1) mkfile 10g hdd.img
 #  0) press enter twice to speed the 9 sec prompt
 #  1) type xterm
 #     choose:
@@ -11,6 +11,7 @@
 #  4) hostname fbsd11
 #  5) don't select extra packages
 #  6) guided Root-on-ZFS
+# 6.5) encrypt swap but not disk disks (maybe works)
 #  7) Proceed with Instalation
 #  8) Stripe - No Redundancy
 #  9) MUST select vtbd0 virtio block device
@@ -24,6 +25,7 @@
 # 17) don't choose anything on system security hardening (change via sh later)
 # 18) press y to add user
 #     - user: dev
+#     - fullname: dev
 #     - UID 501 <-- SUPER IMPORTANT
 #     - password is 111 or whaterver
 #     - all default options selected
@@ -50,7 +52,7 @@
 
 rm -rf hdd.img
 echo 'creating hdd.img'
-mkfile 5g hdd.img
+mkfile 10g hdd.img
 
 UUID="-U deaddead-dead-dead-dead-deaddeaddead"
 

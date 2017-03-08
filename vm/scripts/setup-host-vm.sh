@@ -96,3 +96,8 @@ cat /etc/pf.conf | grep -qE "ext_addr = \"$CURRENT_IP\"" || {
   service pf start
   pfctl -nvf /etc/pf.conf && pfctl -F all -f /etc/pf.conf
 }
+
+
+cat /boot/loader.conf 2> /dev/null | grep -q 'nullfs_load="YES"' || {
+  echo 'nullfs_load="YES"' >> /boot/loader.conf
+}

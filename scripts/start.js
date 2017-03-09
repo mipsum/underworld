@@ -24,9 +24,9 @@ const paths = require('../config/paths');
 
 const useYarn = fs.existsSync(paths.yarnLockFile);
 const cli = useYarn ? 'yarn' : 'npm';
-const isInteractive = process.stdout.isTTY;
+var isInteractive = process.stdout.isTTY;
 
-
+// isInteractive = false
 // Warn and crash if required files are missing
 if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
   process.exit(1);
@@ -221,6 +221,7 @@ function runDevServer(host, port, protocol) {
 
   var devServer = new WebpackDevServer(compiler, {
     // Enable gzip compression of generated files.
+    historyApiFallback: true,
     compress: true,
     // Silence WebpackDevServer's own logs since they're generally not useful.
     // It will still show compile warnings and errors with this setting.

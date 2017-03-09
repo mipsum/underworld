@@ -116,6 +116,13 @@ function setupRules () {
 
 function setupPlugins () {
   return [
+    // new ServiceWorkerPrecache({
+    //   filename: 'service-worker.js',
+    //   minify: true,
+    //   dontCacheBustUrlsMatching: /./,
+    //   navigateFallback: 'index.html',
+    //   staticFileGlobsIgnorePatterns: [/\.map$/]
+    // }),
 
     // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
     new ExtractTextPlugin('static/css/[name].[contenthash:8].css'),
@@ -193,12 +200,7 @@ function setupPlugins () {
       filename: 'visualizer.html'
     }),
 
-    new ServiceWorkerPrecache({
-      filename: 'service-worker.js',
-      dontCacheBustUrlsMatching: /./,
-      navigateFallback: 'index.html',
-      staticFileGlobsIgnorePatterns: [/\.map$/]
-    })
+
   ]
 }
 

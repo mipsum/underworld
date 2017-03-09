@@ -6,25 +6,26 @@ process.env.NODE_ENV = 'development';
 // https://github.com/motdotla/dotenv
 require('dotenv').config({silent: true});
 
-var chalk = require('chalk');
-var webpack = require('webpack');
-var WebpackDevServer = require('webpack-dev-server');
-var historyApiFallback = require('connect-history-api-fallback');
-var httpProxyMiddleware = require('http-proxy-middleware');
-var detect = require('detect-port');
-var clearConsole = require('inferno-dev-utils/clearConsole');
-var checkRequiredFiles = require('inferno-dev-utils/checkRequiredFiles');
-var formatWebpackMessages = require('inferno-dev-utils/formatWebpackMessages');
-var getProcessForPort = require('inferno-dev-utils/getProcessForPort');
-var openBrowser = require('inferno-dev-utils/openBrowser');
-var prompt = require('inferno-dev-utils/prompt');
-var fs = require('fs');
-var config = require('../config/webpack.config.dev');
-var paths = require('../config/paths');
+const chalk = require('chalk');
+const webpack = require('webpack');
+const WebpackDevServer = require('webpack-dev-server');
+const historyApiFallback = require('connect-history-api-fallback');
+const httpProxyMiddleware = require('http-proxy-middleware');
+const detect = require('detect-port');
+const clearConsole = require('inferno-dev-utils/clearConsole');
+const checkRequiredFiles = require('inferno-dev-utils/checkRequiredFiles');
+const formatWebpackMessages = require('inferno-dev-utils/formatWebpackMessages');
+const getProcessForPort = require('inferno-dev-utils/getProcessForPort');
+const openBrowser = require('inferno-dev-utils/openBrowser');
+const prompt = require('inferno-dev-utils/prompt');
+const fs = require('fs');
+const config = require('../config/webpack.config.dev');
+const paths = require('../config/paths');
 
-var useYarn = fs.existsSync(paths.yarnLockFile);
-var cli = useYarn ? 'yarn' : 'npm';
-var isInteractive = process.stdout.isTTY;
+const useYarn = fs.existsSync(paths.yarnLockFile);
+const cli = useYarn ? 'yarn' : 'npm';
+const isInteractive = process.stdout.isTTY;
+
 
 // Warn and crash if required files are missing
 if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
@@ -32,13 +33,13 @@ if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
 }
 
 // Tools like Cloud9 rely on this.
-var DEFAULT_PORT = process.env.PORT || 3000;
+const DEFAULT_PORT = process.env.PORT || 3000;
 var compiler;
 var handleCompile;
 
 // You can safely remove this after ejecting.
 // We only use this block for testing of Create Inferno App itself:
-var isSmokeTest = process.argv.some(arg => arg.indexOf('--smoke-test') > -1);
+const isSmokeTest = process.argv.some(arg => arg.indexOf('--smoke-test') > -1);
 if (isSmokeTest) {
   handleCompile = function (err, stats) {
     if (err || stats.hasErrors() || stats.hasWarnings()) {
@@ -217,6 +218,7 @@ function addMiddleware(devServer) {
 }
 
 function runDevServer(host, port, protocol) {
+
   var devServer = new WebpackDevServer(compiler, {
     // Enable gzip compression of generated files.
     compress: true,

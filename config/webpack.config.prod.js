@@ -1,52 +1,44 @@
-var autoprefixer = require('autoprefixer');
-var webpack = require('webpack');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var ManifestPlugin = require('webpack-manifest-plugin');
-var InterpolateHtmlPlugin = require('inferno-dev-utils/InterpolateHtmlPlugin');
-var url = require('url');
-var paths = require('./paths');
-var getClientEnvironment = require('./env');
+const path = require('path')
+const url = require('url');
 
-var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-var Visualizer = require('webpack-visualizer-plugin');
+const webpack = require('webpack');
+const mergeCfg = require('webpack-merge')
 
-var OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const ManifestPlugin = require('webpack-manifest-plugin');
 
-var path = require('path')
+const ServiceWorkerPrecache = require('sw-precache-webpack-plugin')
 
-function ensureSlash(path, needsSlash) {
-  var hasSlash = path.endsWith('/');
-  if (hasSlash && !needsSlash) {
-    return path.substr(path, path.length - 1);
-  } else if (!hasSlash && needsSlash) {
-    return path + '/';
-  } else {
-    return path;
-  }
-}
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const Visualizer = require('webpack-visualizer-plugin');
+
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+
+const paths = require('./paths');
+const getClientEnvironment = require('./env');
+
 
 // We use "homepage" field to infer "public path" at which the app is served.
 // Webpack needs to know it to put the right <script> hrefs into HTML even in
 // single-page apps that may serve index.html for nested URLs like /todos/42.
 // We can't use a relative path in HTML because we don't want to load something
 // like /todos/42/static/js/bundle.7289d.js. We have to know the root.
-var homepagePath = require(paths.appPackageJson).homepage;
-var homepagePathname = homepagePath ? url.parse(homepagePath).pathname : '/';
+const homepagePath = require(paths.appPackageJson).homepage;
+const homepagePathname = homepagePath ? url.parse(homepagePath).pathname : '/';
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
-var publicPath = ensureSlash(homepagePathname, true);
+const publicPath = ensureSlash(homepagePathname, true);
 // `publicUrl` is just like `publicPath`, but we will provide it to our app
 // as %PUBLIC_URL% in `index.html` and `process.env.PUBLIC_URL` in JavaScript.
 // Omit trailing slash as %PUBLIC_PATH%/xyz looks better than %PUBLIC_PATH%xyz.
-var publicUrl = ensureSlash(homepagePathname, false);
+const publicUrl = ensureSlash(homepagePathname, false);
 // Get environment variables to inject into our app.
-var env = getClientEnvironment(publicUrl);
+const env = getClientEnvironment(publicUrl);
 
 
-var mergeCfg = require('webpack-merge')
 
-var commonCfg = require('./webpack.config.common')
+const commonCfg = require('./webpack.config.common')
 
 // Assert this just to be safe.
 // Development builds of Inferno are slow and not intended for production.
@@ -128,6 +120,7 @@ function setupPlugins () {
     // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
     new ExtractTextPlugin('static/css/[name].[contenthash:8].css'),
 
+    // it deals with some edge case created by ExtractTextPlugin
     new OptimizeCssAssetsPlugin(),
 
     // Generates an `index.html` file with the <script> injected.
@@ -151,8 +144,6 @@ function setupPlugins () {
     // This helps ensure the builds are consistent if source hasn't changed:
     new webpack.optimize.OccurrenceOrderPlugin(),
 
-    // Try to dedupe duplicated modules, if any:
-    new webpack.optimize.DedupePlugin(),
     // // Minify the code.
     new webpack.optimize.UglifyJsPlugin({
       warnings: true,
@@ -178,8 +169,6 @@ function setupPlugins () {
       }
     }),
 
-
-
     // Generate a manifest file which contains a mapping of all asset filenames
     // to their corresponding output file so that tools can pick it up without
     // having to parse `index.html`.
@@ -199,8 +188,28 @@ function setupPlugins () {
       // Relative to bundles output directory.
       statsFilename: 'stats.json',
     }),
+
     new Visualizer({
       filename: 'visualizer.html'
     }),
+
+    new ServiceWorkerPrecache({
+      filename: 'service-worker.js',
+      dontCacheBustUrlsMatching: /./,
+      navigateFallback: 'index.html',
+      staticFileGlobsIgnorePatterns: [/\.map$/]
+    })
   ]
+}
+
+
+function ensureSlash(path, needsSlash) {
+  const hasSlash = path.endsWith('/');
+  if (hasSlash && !needsSlash) {
+    return path.substr(path, path.length - 1);
+  } else if (!hasSlash && needsSlash) {
+    return path + '/';
+  } else {
+    return path;
+  }
 }

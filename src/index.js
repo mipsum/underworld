@@ -9,7 +9,7 @@ import 'milligram'
 // import 'roboto-fontface/css/roboto/roboto-fontface.css'
 
 import './index.css'
-import './app.css'
+import './app.scss'
 
 console.log('****')
 

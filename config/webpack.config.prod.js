@@ -44,6 +44,11 @@ var publicUrl = ensureSlash(homepagePathname, false);
 // Get environment variables to inject into our app.
 var env = getClientEnvironment(publicUrl);
 
+
+var mergeCfg = require('webpack-merge')
+
+var commonCfg = require('./webpack.config.common')
+
 // Assert this just to be safe.
 // Development builds of Inferno are slow and not intended for production.
 if (env['process.env'].NODE_ENV !== '"production"') {
@@ -53,7 +58,7 @@ if (env['process.env'].NODE_ENV !== '"production"') {
 // This is the production configuration.
 // It compiles slowly and is focused on producing a fast and minimal bundle.
 // The development configuration is different and lives in a separate file.
-module.exports = {
+module.exports = mergeCfg(commonCfg, {
   // Don't attempt to continue if there are any errors.
   bail: true,
 
@@ -68,154 +73,75 @@ module.exports = {
     paths.appIndexJs
   ],
   output: {
-    sourceMapFilename: 'static/js/maps/[name].[chunkhash:8].map',
-    // The build folder.
-    path: paths.appBuild,
-    // Add /* filename */ comments to generated require()s in the output.
-    pathinfo: true,
     // Generated JS file names (with nested folders).
     // There will be one main bundle, and one file per asynchronous chunk.
     // We don't currently advertise code splitting but Webpack supports it.
     filename: 'static/js/[name].[chunkhash:8].js',
     chunkFilename: 'static/js/[name].[chunkhash:8].chunk.js',
-    // We inferred the "public path" (such as / or /my-project) from homepage.
-    publicPath: publicPath
-  },
-  resolve: {
-    // This allows you to set a fallback for where Webpack should look for modules.
-    // We read `NODE_PATH` environment variable in `paths.js` and pass paths here.
-    // We use `fallback` instead of `root` because we want `node_modules` to "win"
-    // if there any conflicts. This matches Node resolution mechanism.
-    // https://github.com/facebookincubator/create-react-app/issues/253
-    fallback: paths.nodePaths,
-    // These are the reasonable defaults supported by the Node ecosystem.
-    // We also include JSX as a common component filename extension to support
-    // some tools, although we do not recommend using it, see:
-    // https://github.com/facebookincubator/create-react-app/issues/290
-    extensions: ['.js', '.json', '.jsx', ''],
 
-    alias: {
-      fw: path.resolve(BASE_PATH, './src/framework'),
-      // buffer:  path.resolve(BASE_PATH, './src/framework/buffer'),
-      // 'buffer-shims':  path.resolve(BASE_PATH, './src/framework/buffer-shims'),
-    },
   },
 
   module: {
-    // First, run the linter.
-    // It's important to do this before Babel processes the JS.
-    preLoaders: [
-      {
-        test: /\.(js|jsx)$/,
-        loader: 'eslint',
-        include: paths.appSrc
-      }
-    ],
-    loaders: [
-      // Default loader: load all assets that are not handled
-      // by other loaders with the url loader.
-      // Note: This list needs to be updated with every change of extensions
-      // the other loaders match.
-      // E.g., when adding a loader for a new supported file extension,
-      // we need to add the supported extension to this loader too.
-      // Add one new line in `exclude` for each loader.
-      //
-      // "file" loader makes sure those assets end up in the `build` folder.
-      // When you `import` an asset, you get its filename.
-      // "url" loader works just like "file" loader but it also embeds
-      // assets smaller than specified size as data URLs to avoid requests.
-      {
-        exclude: [
-          /\.html$/,
-          /\.(js|jsx)$/,
-          /\.css$/,
-          /\.json$/,
-          /\.svg$/
-        ],
-        loader: 'url',
-        query: {
-          limit: 10000,
-          name: 'static/media/[name].[hash:8].[ext]'
-        }
-      },
-      // Process JS with Babel.
-      {
-        test: /\.(js|jsx)$/,
-        include: paths.appSrc,
-        loader: 'babel',
-
-      },
-      // The notation here is somewhat confusing.
-      // "postcss" loader applies autoprefixer to our CSS.
-      // "css" loader resolves paths in CSS and adds assets as dependencies.
-      // "style" loader normally turns CSS into JS modules injecting <style>,
-      // but unlike in development configuration, we do something different.
-      // `ExtractTextPlugin` first applies the "postcss" and "css" loaders
-      // (second argument), then grabs the result CSS and puts it into a
-      // separate file in our build process. This way we actually ship
-      // a single CSS file in production instead of JS code injecting <style>
-      // tags. If you use code splitting, however, any async bundles will still
-      // use the "style" loader inside the async code so CSS from them won't be
-      // in the main CSS file.
-      {
-        test: /\.(css|scss|sass)$/,
-        // Note: this won't work without `new ExtractTextPlugin()` in `plugins`.
-
-        loader: ExtractTextPlugin.extract("style-loader", "css-loader", 'postcss-loader', 'sass-loader'),
-
-      },
-      // {
-      //   test: /\.css$/,
-      //   loader: ExtractTextPlugin.extract('style', 'css?importLoaders=1!postcss')
-      // },
-      // JSON is not enabled by default in Webpack but both Node and Browserify
-      // allow it implicitly so we also enable it.
-      {
-        test: /\.json$/,
-        loader: 'json'
-      },
-      // "file" loader for svg
-      {
-        test: /\.svg$/,
-        loader: 'file',
-        query: {
-          name: 'static/media/[name].[hash:8].[ext]'
-        }
-      }
-    ]
+    rules: setupRules()
   },
 
-  // We use PostCSS for autoprefixing only.
-  postcss: function() {
-    return [
-      autoprefixer({
-        browsers: [
-          '>1%',
-          'last 4 versions',
-          'Firefox ESR',
-          'not ie < 9', // Inferno doesn't support IE8 anyway
+  plugins: setupPlugins() ,
+  // Some libraries import Node modules but don't use them in the browser.
+  // Tell Webpack to provide empty mocks for them so importing them works.
+  node: {
+    fs: 'empty',
+    net: 'empty',
+    tls: 'empty',
+    process: false,
+    // buffer: 'empty',
+    // Buffer: 'empty',
+    // 'buffer-shims': 'empty'
+  }
+})
+
+
+function setupRules () {
+  return [
+    // The notation here is somewhat confusing.
+    // "postcss" loader applies autoprefixer to our CSS.
+    // "css" loader resolves paths in CSS and adds assets as dependencies.
+    // "style" loader normally turns CSS into JS modules injecting <style>,
+    // but unlike in development configuration, we do something different.
+    // `ExtractTextPlugin` first applies the "postcss" and "css" loaders
+    // (second argument), then grabs the result CSS and puts it into a
+    // separate file in our build process. This way we actually ship
+    // a single CSS file in production instead of JS code injecting <style>
+    // tags. If you use code splitting, however, any async bundles will still
+    // use the "style" loader inside the async code so CSS from them won't be
+    // in the main CSS file.
+    {
+      test: /\.(css|scss|sass)$/,
+      loader: ExtractTextPlugin.extract({
+        fallback: 'style-loader',
+        use: [
+          'css-loader',
+          'postcss-loader',
+          'sass-loader'
         ]
       }),
-    ];
-  },
-  plugins: [
-    // collect all vendors into a separate bundle
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendors',
-      minChunks (m) {
+    },
 
-        // this assumes your vendor imports exist in the node_ms directory
-        return m.context && m.context.indexOf('node_modules') !== -1;
-       }
-    }),
+    // {
+    //   test: /\.(css)$/,
+    //   loader: ExtractTextPlugin.extract({
+    //     use: 'style-loader',
+    //     loader: [ 'postcss-loader', 'css-loader',]
+    //   }),
+    // },
+  ]
+}
 
-    // Makes the public URL available as %PUBLIC_URL% in index.html, e.g.:
-    // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
-    // In production, it will be an empty string unless you specify "homepage"
-    // in `package.json`, in which case it will be the pathname of that URL.
-    new InterpolateHtmlPlugin({
-      PUBLIC_URL: publicUrl
-    }),
+function setupPlugins () {
+  return [
+
+    // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
+    new ExtractTextPlugin('static/css/[name].[contenthash:8].css'),
+
 
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
@@ -234,12 +160,6 @@ module.exports = {
         minifyURLs: true
       }
     }),
-
-    // Makes some environment variables available to the JS code, for example:
-    // if (process.env.NODE_ENV === 'production') { ... }. See `./env.js`.
-    // It is absolutely essential that NODE_ENV was set to production here.
-    // Otherwise Inferno will be compiled in the very slow development mode.
-    new webpack.DefinePlugin(env),
 
     // This helps ensure the builds are consistent if source hasn't changed:
     new webpack.optimize.OccurrenceOrderPlugin(),
@@ -271,8 +191,6 @@ module.exports = {
       }
     }),
 
-    // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
-    new ExtractTextPlugin('static/css/[name].[contenthash:8].css'),
 
 
     // Generate a manifest file which contains a mapping of all asset filenames
@@ -297,16 +215,5 @@ module.exports = {
     new Visualizer({
       filename: 'visualizer.html'
     }),
-  ],
-  // Some libraries import Node modules but don't use them in the browser.
-  // Tell Webpack to provide empty mocks for them so importing them works.
-  node: {
-    fs: 'empty',
-    net: 'empty',
-    tls: 'empty',
-    process: 'empty',
-    // buffer: 'empty',
-    // Buffer: 'empty',
-    // 'buffer-shims': 'empty'
-  }
-};
+  ]
+}

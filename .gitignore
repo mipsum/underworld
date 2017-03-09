@@ -2,6 +2,8 @@
 
 tor
 
+*-bak
+
 # dependencies
 node_modules
 

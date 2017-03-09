@@ -259,6 +259,7 @@ module.exports = {
         drop_debugger: true,
         collapse_vars: true,
         reduce_vars: true,
+        negate_iife: false, // for LazyParseWebpackPlugin
       },
       // mangle: false,
       mangle: {

@@ -69,12 +69,12 @@ module.exports = {
     // We use `fallback` instead of `root` because we want `node_modules` to "win"
     // if there any conflicts. This matches Node resolution mechanism.
     // https://github.com/facebookincubator/create-react-app/issues/253
-    fallback: paths.nodePaths,
+    modules: paths.nodePaths,
     // These are the reasonable defaults supported by the Node ecosystem.
     // We also include JSX as a common component filename extension to support
     // some tools, although we do not recommend using it, see:
     // https://github.com/facebookincubator/create-react-app/issues/290
-    extensions: ['.js', '.json', '.jsx', ''],
+    extensions: ['.js', '.json', '.jsx'],
 
     alias: {
       fw: path.resolve(BASE_PATH, './src/framework'),
@@ -82,16 +82,16 @@ module.exports = {
   },
 
   module: {
-    // First, run the linter.
-    // It's important to do this before Babel processes the JS.
-    preLoaders: [
+
+    rules: [
+      // First, run the linter.
+      // It's important to do this before Babel processes the JS.
       {
-        test: /\.(js|jsx)$/,
-        loader: 'eslint',
-        include: paths.appSrc,
-      }
-    ],
-    loaders: [
+         enforce: 'pre',
+         test: /\.(js|jsx)$/,
+         loader: 'eslint-loader',
+         include: paths.appSrc,
+       },
       // Default loader: load all assets that are not handled
       // by other loaders with the url loader.
       // Note: This list needs to be updated with every change of extensions
@@ -114,7 +114,7 @@ module.exports = {
           /\.json$/,
           /\.svg$/
         ],
-        loader: 'url',
+        loader: 'url-loader',
         query: {
           limit: 10000,
           name: 'static/media/[name].[hash:8].[ext]'
@@ -124,7 +124,7 @@ module.exports = {
       {
         test: /\.(js|jsx)$/,
         include: paths.appSrc,
-        loader: 'babel',
+        loader: 'babel-loader',
         query: {
 
           // This is a feature of `babel-loader` for webpack (not Babel itself).
@@ -152,16 +152,33 @@ module.exports = {
           'sass-loader'
         ]
       },
-            // JSON is not enabled by default in Webpack but both Node and Browserify
+
+      // {
+      //   loader: 'postcss-loader',
+      //   options: {
+      //     plugins: () => [
+      //       autoprefixer({
+      //         browsers: [
+      //           '>1%',
+      //           'last 4 versions',
+      //           'Firefox ESR',
+      //           'not ie < 9', // Inferno doesn't support IE8 anyway
+      //         ]
+      //       }),
+      //     ]
+      //   }
+      // },
+
+      // JSON is not enabled by default in Webpack but both Node and Browserify
       // allow it implicitly so we also enable it.
       {
         test: /\.json$/,
-        loader: 'json'
+        loader: 'json-loader'
       },
       // "file" loader for svg
       {
         test: /\.svg$/,
-        loader: 'file',
+        loader: 'file-loader',
         query: {
           name: 'static/media/[name].[hash:8].[ext]'
         }
@@ -169,20 +186,34 @@ module.exports = {
     ]
   },
 
-  // We use PostCSS for autoprefixing only.
-  postcss: function() {
-    return [
-      autoprefixer({
-        browsers: [
-          '>1%',
-          'last 4 versions',
-          'Firefox ESR',
-          'not ie < 9', // Inferno doesn't support IE8 anyway
-        ]
-      }),
-    ];
-  },
+  // // We use PostCSS for autoprefixing only.
+  // postcss: function() {
+  //   return [
+      // autoprefixer({
+      //   browsers: [
+      //     '>1%',
+      //     'last 4 versions',
+      //     'Firefox ESR',
+      //     'not ie < 9', // Inferno doesn't support IE8 anyway
+      //   ]
+      // }),
+  //   ];
+  // },
   plugins: [
+    new webpack.LoaderOptionsPlugin({
+      options: {
+        postcss: [
+          autoprefixer({
+            browsers: [
+              '>1%',
+              'last 4 versions',
+              'Firefox ESR',
+              'not ie < 9', // Inferno doesn't support IE8 anyway
+            ]
+          }),
+        ]
+      }
+    }),
 
     // collect all vendors into a separate bundle
     new webpack.optimize.CommonsChunkPlugin({
@@ -229,7 +260,7 @@ module.exports = {
     fs: 'empty',
     net: 'empty',
     tls: 'empty',
-    process: 'empty',
+    process: false,
     // buffer: 'empty',
     // Buffer: 'empty',
     // 'buffer-shims': 'empty'

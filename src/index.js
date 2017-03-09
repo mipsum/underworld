@@ -10,6 +10,7 @@ import 'milligram'
 
 import './index.css'
 import './app.scss'
+import './card.scss'
 
 console.log('****')
 

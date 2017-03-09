@@ -11,6 +11,7 @@ var getClientEnvironment = require('./env');
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 var Visualizer = require('webpack-visualizer-plugin');
 
+var OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 
 var path = require('path')
 
@@ -142,6 +143,7 @@ function setupPlugins () {
     // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
     new ExtractTextPlugin('static/css/[name].[contenthash:8].css'),
 
+    new OptimizeCssAssetsPlugin(),
 
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({

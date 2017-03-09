@@ -1,40 +1,4 @@
 
-.card {
-    /* Add shadows to create the "card" effect */
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    /*transition: 0.3s;*/
-    border-radius: 5px; /* 5px rounded corners */
-    min-height: 80vh;
-    /*min-width: 80vh; */
-    /*max-width: 40rem;
-    min-width: 30rem;*/
-
-    background:
-    	linear-gradient(
-    		limegreen,
-    		transparent
-    	),
-    	linear-gradient(
-    		90deg,
-    		skyblue,
-    		transparent
-    	),
-    	linear-gradient(
-    		-90deg,
-    		skyblue,
-    		transparent
-    	);
-
-
-
-    background-blend-mode: screen;
-
-    /*display: flex;
-    align-items: center;
-    min-height: 24rem;
-    justify-content: center;*/
-}
-
 .container {
   color: white;
 

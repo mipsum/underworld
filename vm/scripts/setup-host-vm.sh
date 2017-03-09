@@ -4,8 +4,13 @@
 
 # setup ezjail
 [ -d "/usr/jails/basejail" ] || {
-  pkg install -y ezjail
+
+  echo 'openntpd_enable="YES"' >> /etc/rc.conf
+  pkg install -y ezjail openntpd
+  service openntpd start
+
   ezjail-admin install
+
 }
 
 

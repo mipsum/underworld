@@ -3,9 +3,10 @@
 sh /mnt/app/vm/scripts/setup-host-vm.sh
 sh /mnt/app/vm/scripts/setup-nginx.sh
 sh /mnt/app/vm/scripts/setup-nodejs.sh
+sh /mnt/app/vm/scripts/setup-tor.sh
 
-pkg -j nodejs autoremove -y
-pkg -j nodejs clean -ya
+pkg autoremove -y
+pkg clean -ya
 
 sleep 1
 jexec $(jls | grep 'nginx' | cut -d' ' -f6) service nginx restart

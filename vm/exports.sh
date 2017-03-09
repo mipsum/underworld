@@ -16,8 +16,8 @@ cat << EOF
 
   once logged in
   ==============
-  mount 192.168.64.1:$TARGET_DIR /app
-  mount -t nullfs /mnt/app/vm/shared/node_modules /mnt/app/node_modules
+  mkdir -p /mnt/app && mount 192.168.64.1:$TARGET_DIR /mnt/app
+  mount -t nullfs -o ro /mnt/app/vm/shared/node_modules /mnt/app/node_modules
 
 
   or mount on boot the app directory from host MACOS into the guest FREEBSD

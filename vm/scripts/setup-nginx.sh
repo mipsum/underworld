@@ -35,7 +35,7 @@ jail_net='$jail_net'
 nginx = "$NGINX_IP"
 nginx_TCP_PORTS = "{ 80, 443 }"
 
-# Redirect traffic on ports 80 and 443 to the webserver jail
+# Redirect clearnet traffic on ports 80 and 443 to the webserver jail
 rdr pass on $ext_if inet proto tcp to port $nginx_TCP_PORTS -> $nginx
 
 EOF
@@ -94,6 +94,7 @@ http {
     index  index.html index.htm;
 
     listen 80;
+    listen 8080;
     # listen 443 ssl;
 
     # ssl_certificate /some/location/sillyfacesociety.com.bundle.crt;
@@ -172,7 +173,7 @@ http {
 
     location / {
        try_files $uri $uri/ @proxy;
-     }
+    }
 
 
   }

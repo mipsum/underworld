@@ -15,8 +15,6 @@ var OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 
 var path = require('path')
 
-var BASE_PATH = path.resolve(__dirname, '..')
-
 function ensureSlash(path, needsSlash) {
   var hasSlash = path.endsWith('/');
   if (hasSlash && !needsSlash) {
@@ -64,16 +62,20 @@ module.exports = mergeCfg(commonCfg, {
   bail: true,
 
   profile: true,
+
   // We generate sourcemaps in production. This is slow but gives good results.
   // You can exclude the *.map files from the build during deployment.
   devtool: 'source-map',
-  // In production, we only want to load the polyfills and the app code.
+
   entry: [
+    // In production, we only want to load the polyfills and the app code.
     // require.resolve('./polyfills'),
-    // path.resolve(BASE_PATH, './src/polyfills'),
+    // path.resolve(paths.appDirectory, './src/polyfills'),
     paths.appIndexJs
   ],
+
   output: {
+
     // Generated JS file names (with nested folders).
     // There will be one main bundle, and one file per asynchronous chunk.
     // We don't currently advertise code splitting but Webpack supports it.
@@ -83,21 +85,11 @@ module.exports = mergeCfg(commonCfg, {
   },
 
   module: {
-    rules: setupRules()
+    rules: setupRules(),
   },
 
-  plugins: setupPlugins() ,
-  // Some libraries import Node modules but don't use them in the browser.
-  // Tell Webpack to provide empty mocks for them so importing them works.
-  node: {
-    fs: 'empty',
-    net: 'empty',
-    tls: 'empty',
-    process: false,
-    // buffer: 'empty',
-    // Buffer: 'empty',
-    // 'buffer-shims': 'empty'
-  }
+  plugins: setupPlugins(),
+
 })
 
 
@@ -126,16 +118,9 @@ function setupRules () {
         ]
       }),
     },
-
-    // {
-    //   test: /\.(css)$/,
-    //   loader: ExtractTextPlugin.extract({
-    //     use: 'style-loader',
-    //     loader: [ 'postcss-loader', 'css-loader',]
-    //   }),
-    // },
   ]
 }
+
 
 function setupPlugins () {
   return [

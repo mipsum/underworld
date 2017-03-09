@@ -3,7 +3,7 @@
 
 var INFERNO_APP = /^INFERNO_APP_/i;
 
-function getClientEnvironment(publicUrl) {
+module.exports = function getClientEnvironment(publicUrl) {
   var processEnv = Object
     .keys(process.env)
     .filter(key => INFERNO_APP.test(key))
@@ -27,5 +27,3 @@ function getClientEnvironment(publicUrl) {
     __DEV__ : 'production' !== process.env.NODE_ENV,
   };
 }
-
-module.exports = getClientEnvironment;

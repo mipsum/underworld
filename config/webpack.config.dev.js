@@ -1,19 +1,14 @@
-var autoprefixer = require('autoprefixer');
-var webpack = require('webpack');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
-var InterpolateHtmlPlugin = require('inferno-dev-utils/InterpolateHtmlPlugin');
-var WatchMissingNodeModulesPlugin = require('inferno-dev-utils/WatchMissingNodeModulesPlugin');
-var getClientEnvironment = require('./env');
-var paths = require('./paths');
-
-var mergeCfg = require('webpack-merge')
-
-var commonCfg = require('./webpack.config.common')
-
 var path = require('path')
 
-var BASE_PATH = path.resolve(__dirname, '..')
+var webpack = require('webpack');
+var mergeCfg = require('webpack-merge')
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+var CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
+var WatchMissingNodeModulesPlugin = require('inferno-dev-utils/WatchMissingNodeModulesPlugin');
+
+// var getClientEnvironment = require('./env');
+var paths = require('./paths');
+var commonCfg = require('./webpack.config.common')
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
@@ -23,7 +18,7 @@ var publicPath = '/';
 // Omit trailing slash as %PUBLIC_PATH%/xyz looks better than %PUBLIC_PATH%xyz.
 var publicUrl = '';
 // Get environment variables to inject into our app.
-var env = getClientEnvironment(publicUrl);
+// var env = getClientEnvironment(publicUrl);
 
 
 // This is the development configuration.
@@ -47,26 +42,10 @@ module.exports = mergeCfg(commonCfg, {
     // require.resolve('webpack/hot/dev-server'),
     require.resolve('inferno-dev-utils/webpackHotDevClient'),
     // We ship a few polyfills by default:
-    // path.resolve(BASE_PATH, './src/polyfills'),
+    // path.resolve(paths.appDirectory, './src/polyfills'),
     // Finally, this is your app's code:
     paths.appIndexJs,
   ],
-
-  module: {
-    rules: [
-      {
-        test: /\.(css|scss|sass)$/,
-        loaders: [
-          'style-loader',
-          'css-loader',
-          'postcss-loader',
-          'sass-loader'
-        ]
-      },
-    ]
-  },
-
-
 
   output: {
     // This does not produce a real file. It's just the virtual path that is
@@ -75,9 +54,28 @@ module.exports = mergeCfg(commonCfg, {
     filename: 'static/js/[name]-bundle.js',
   },
 
+  module: {
+    rules: setupRules(),
+  },
+
   plugins: setupPlugins(),
 
 })
+
+
+function setupRules () {
+  return [
+    {
+      test: /\.(css|scss|sass)$/,
+      loaders: [
+        'style-loader',
+        'css-loader',
+        'postcss-loader',
+        'sass-loader'
+      ]
+    },
+  ]
+}
 
 
 function setupPlugins () {

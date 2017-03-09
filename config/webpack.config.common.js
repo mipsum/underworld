@@ -72,10 +72,6 @@ module.exports = {
     net: 'empty',
     tls: 'empty',
     process: false,
-    // buffer: 'empty',
-    // Buffer: 'empty',
-    // 'buffer-shims': 'empty'
-
   }
 };
 
@@ -152,8 +148,6 @@ function setupRules () {
 
 function setupPlugins () {
   return [
-    // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
-    // new ExtractTextPlugin('static/css/[name].[contenthash:8].css'),
 
     // We use PostCSS for autoprefixing only.
     new webpack.LoaderOptionsPlugin({

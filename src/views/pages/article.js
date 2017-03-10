@@ -2,6 +2,8 @@ import Inferno from 'inferno';
 import { Link } from 'inferno-router';
 import Card from '../tags/card';
 
+import './article.sass'
+
 export default function (props) {
 	const title = props.params.title;
 	return (

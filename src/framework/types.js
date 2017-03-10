@@ -11,11 +11,12 @@ export const Maybe =
     Just: [any],
   })
 
-Maybe.extends = type => {
-  let t = Type(type)
-  t._ctor = Maybe
-  return t
-}
+Maybe.extends =
+  type => {
+    let t = Type(type)
+    t._ctor = Maybe
+    return t
+  }
 
 
 Maybe.prototype.map =

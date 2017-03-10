@@ -1,6 +1,8 @@
 import Inferno from 'inferno';
 import Header from './header';
 
+import './layout.sass'
+
 export default function (props) {
 	return (
 		<div id="app">

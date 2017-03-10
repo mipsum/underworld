@@ -1,6 +1,8 @@
 import Inferno from 'inferno';
 import Card from '../../tags/card';
 
+import './404.sass'
+
 export default function () {
 	return (
 		<div className="page page__404">

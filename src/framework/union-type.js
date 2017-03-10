@@ -6,11 +6,24 @@
 import curryN from 'ramda/src/curryN'
 import compose from 'ramda/src/compose'
 
-var isString = s => typeof s === 'string'
-var isNumber = n => typeof n === 'number'
-var isBoolean = b =>  typeof b === 'boolean'
-var isFunction = f => typeof f === 'function'
-var isArray = Array.isArray || (a => 'length' in a)
+var isString =
+  s => typeof s === 'string'
+
+
+var isNumber =
+  n => typeof n === 'number'
+
+
+var isBoolean =
+  b =>  typeof b === 'boolean'
+
+
+var isFunction =
+  f => typeof f === 'function'
+
+  
+var isArray =
+  Array.isArray || (a => 'length' in a)
 
 var isObject = value => {
   var type = typeof value

@@ -15,9 +15,9 @@ const Visualizer = require('webpack-visualizer-plugin');
 
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 
-const paths = require('./paths');
 const getClientEnvironment = require('./env');
 
+const paths = getClientEnvironment.paths;
 
 // We use "homepage" field to infer "public path" at which the app is served.
 // Webpack needs to know it to put the right <script> hrefs into HTML even in

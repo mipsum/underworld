@@ -7,7 +7,7 @@ const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const WatchMissingNodeModulesPlugin = require('inferno-dev-utils/WatchMissingNodeModulesPlugin');
 
 // const getClientEnvironment = require('./env');
-const paths = require('./paths');
+const { paths } = require('./env');
 const commonCfg = require('./webpack.config.common')
 
 // Webpack uses `publicPath` to determine where the app is being served from.

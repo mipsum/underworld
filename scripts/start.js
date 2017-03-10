@@ -20,7 +20,7 @@ const openBrowser = require('inferno-dev-utils/openBrowser');
 const prompt = require('inferno-dev-utils/prompt');
 const fs = require('fs');
 const config = require('../config/webpack.config.dev');
-const paths = require('../config/paths');
+const paths = require('../config/env').paths
 
 const useYarn = fs.existsSync(paths.yarnLockFile);
 const cli = useYarn ? 'yarn' : 'npm';

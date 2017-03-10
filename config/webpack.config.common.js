@@ -1,13 +1,16 @@
+const path = require('path')
+
 const autoprefixer = require('autoprefixer');
 const webpack = require('webpack');
 const InterpolateHtmlPlugin = require('inferno-dev-utils/InterpolateHtmlPlugin');
 const WatchMissingNodeModulesPlugin = require('inferno-dev-utils/WatchMissingNodeModulesPlugin');
 const getClientEnvironment = require('./env');
-const paths = require('./paths');
 
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-const path = require('path')
+
+
+const paths = getClientEnvironment.paths
 
 const BASE_PATH = path.resolve(__dirname, '..')
 

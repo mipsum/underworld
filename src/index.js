@@ -23,7 +23,6 @@ import Inferno from 'inferno';
 import { Router } from 'inferno-router';
 import { createBrowserHistory } from 'history';
 import views from './app';
-import './pages/page.sass';
 
 const history = createBrowserHistory();
 

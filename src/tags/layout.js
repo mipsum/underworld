@@ -1,7 +1,7 @@
 import Inferno from 'inferno';
 import Header from './header';
 
-import './layout.sass'
+import './layout.scss'
 
 export default function (props) {
 	return (

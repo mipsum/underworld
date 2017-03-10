@@ -1,7 +1,7 @@
 import Inferno from 'inferno'
 import { Route } from 'inferno-router'
 
-import './app.sass';
+import './app.scss';
 
 import Home from './pages/home';
 import Layout from './tags/layout';

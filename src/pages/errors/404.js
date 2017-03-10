@@ -1,7 +1,7 @@
 import Inferno from 'inferno';
 import Card from '../../tags/card';
 
-import './404.sass'
+import './404.scss'
 
 export default function () {
 	return (

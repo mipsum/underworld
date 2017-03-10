@@ -1,0 +1,13 @@
+// App Layout
+
+@import "../styles/extns";
+@import "../styles/doc";
+@import "./header";
+
+#app {
+  @extend %fullscreen;
+}
+
+#content {
+  padding-top: $header-height;
+}

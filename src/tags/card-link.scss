@@ -1,0 +1,21 @@
+// Clickable Card
+
+@import "../styles/extns";
+@import "../styles/vars";
+
+@import "../styles/doc";
+
+a.card {
+  cursor: pointer;
+  text-decoration: none;
+  color: $black;
+
+  strong, em {
+    display: block;
+  }
+
+  em {
+    font-size: 85%;
+    padding-left: $base-spacing / 2;
+  }
+}

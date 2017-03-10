@@ -1,7 +1,7 @@
 import Inferno from 'inferno';
 import { Link } from 'inferno-router';
 
-import './header.sass'
+import './header.scss'
 
 export default function () {
 	return (

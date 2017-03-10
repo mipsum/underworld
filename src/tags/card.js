@@ -1,6 +1,6 @@
 import Inferno from 'inferno';
 
-import './card.sass'
+import './card.scss'
 
 export default function (props) {
 	return <div className="card">{ props.children }</div>

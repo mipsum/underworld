@@ -1,19 +1,19 @@
-import './setup'
-
 import Inferno from 'inferno'
-// import stream from 'fw/stream'
-import run from 'fw/run'
+import { Route } from 'inferno-router'
 
-import './middlewares'
+import Home from './pages/home';
+import Layout from './tags/layout';
+import Article from './pages/article';
+import Error404 from './pages/errors/404';
+import Credit from './pages/credit';
+import Blog from './pages/blog';
 
-import View from './view'
-
-import { init } from './widgets/counter/update'
-
-
-
-export default () => {
-  const elem = document.getElementById('app')
-
-  run(init, model => Inferno.render(<View model={ model }/>, elem))
-}
+export default (
+	<Route component={ Layout }>
+		<Route path="/" component={ Home } />
+		<Route path="/credit" component={ Credit } />
+		<Route path="/blog" component={ Blog } />
+		<Route path="/blog/:title" component={ Article } />
+		<Route path="*" component={ Error404 } />
+	</Route>
+);

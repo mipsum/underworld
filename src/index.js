@@ -22,8 +22,8 @@ import 'milligram'
 import Inferno from 'inferno';
 import { Router } from 'inferno-router';
 import { createBrowserHistory } from 'history';
-import views from './views';
-import './views/pages/page.sass';
+import views from './app';
+import './pages/page.sass';
 
 const history = createBrowserHistory();
 

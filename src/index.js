@@ -32,7 +32,7 @@ const App = () => (
   </Router>
 );
 
-Inferno.render(App(), document.getElementById('app'));
+Inferno.render(App(), document.getElementById('root'));
 
 
 if (!__DEV__) {
